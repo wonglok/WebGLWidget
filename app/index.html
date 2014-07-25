@@ -1,0 +1,42 @@
+<!doctype html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <title>wglwidget</title>
+        <meta name="description" content="github.com/wonglok/WebGLWidget">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.5">
+        <!-- build:css styles/vendor.css -->
+        <!-- bower:css -->
+        <!-- endbower -->
+        <!-- endbuild -->
+        <!-- build:css(.tmp) styles/main.css -->
+        <!-- endbuild -->
+        <style>body{margin:0;padding:0}#wi{display:none;}</style>
+    </head>
+    <body>
+        <img id="wi" src="images/texture/webgl.png" alt="">
+        <canvas  width="200" height="200" id="ww">Your browser does not support Canvas :(</canvas>
+        <noscript>No Javascript :(</noscript>
+        <!-- build:js scripts/vendor.js -->
+        <!-- bower:js -->
+        <!-- endbower -->
+
+        <!-- endbuild -->
+        <!--
+        <link rel="stylesheet" href="styles/main.css">
+        <script src="../bower_components/Stats/index.js"></script>
+        <script src="scripts/vendor/glMatrix-0.9.5.min.js"></script>
+        -->
+        <!-- build:js({app,.tmp}) scripts/main.js -->
+        <script src="../bower_components/raf.js/raf.js"></script>
+        <script src="scripts/vendor/gl-matrix-2.1.1-custom.js"></script>
+        <script src="scripts/vco.js"></script>
+        <script src="scripts/webgl/core.js"></script>
+        <script src="scripts/webgl/fbo.js"></script>
+        <script src="scripts/main.js"></script>
+        <script src="scripts/renderables/logoFan.js"></script>
+        <script src="scripts/renderables/cube.js"></script>
+        <script src="scripts/shaders.js"></script>
+        <!-- endbuild -->
+    </body>
+</html>
