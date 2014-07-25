@@ -25,7 +25,9 @@
             return mat4.create();
         };
         _f._reset = function(o){
-            return mat4.identity(o);
+        	o.___next = null;
+        	o.___prev = null;
+        	return mat4.identity(o);
         };
         _f.prep(3);
 
@@ -602,13 +604,12 @@
 		}
 		function loop(fsTime){
 			if (timerID === null){ return; }
-
-
 			timerID = window.requestAnimationFrame(loop);
 
 			//debugger;
 
 			clock.updateTime(fsTime);
+
 			render(fsTime);
 
 			frbt.stepTask(fsTime);
@@ -619,6 +620,22 @@
 			start: start,
 			stop: stop
 		};
+	});
+
+	/**
+	 * resume on focus
+	 * @return {[type]} [description]
+	 */
+	_di.set('service.focus',function(){
+		var loop = _di.get('loop');
+		function focus(){
+			loop.start();
+		}
+		function blur(){
+			loop.stop();
+		}
+		window.addEventListener('focus',focus,false);
+		window.addEventListener('blur',blur,false);
 	});
 
 	/**
@@ -640,21 +657,7 @@
 		return currentlyPressedKeys;
 	});
 
-	/**
-	 * resume on focus
-	 * @return {[type]} [description]
-	 */
-	_di.set('service.focus.pause',function(){
-		var loop = _di.get('loop');
-		function focus(){
-			loop.start();
-		}
-		function blur(){
-			loop.stop();
-		}
-		window.addEventListener('focus',focus,false);
-		window.addEventListener('blur',blur,false);
-	});
+
 
 	/**
 	 * Clock maker

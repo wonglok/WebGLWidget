@@ -29,6 +29,8 @@
 		];
 
 
+		scene = [cube];
+		postProcess = [post.normal];
 
 		var stage = {
 			current:{
@@ -80,12 +82,10 @@
 			// gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 			if (current.postProcess && current.postProcess.type === 'particle'){
 
-
 			}else if (
 				current.postProcess && current.postProcess.type === 'blur' ||
 				current.postProcess && current.postProcess.type === 'normal'
 			){
-
 				//set to fbo
 				rttFBO1.bindFrameBuffer();
 				//render,
@@ -105,6 +105,7 @@
 				rttFBO1.draw();
 
 			}else{
+				//omg omg omg
 				current.renderer.render();
 			}
 
@@ -130,6 +131,7 @@
 
 		_di.get('canvas');
 		_di.get('context');
+		//_di.get('service.focus');
 
 		_di.get('loop').start();
 
