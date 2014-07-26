@@ -1,7 +1,11 @@
-/*
-Fixed mobile bug
-Original: http://xissburg.com/faster-gaussian-blur-in-glsl/
+/**
+ * Wong Lok
+ * @wonglok831
+ * Gaussain Blur Fragment Shader - Post Process
+ * Fixed Mobile Bug
+ * Origian: http://xissburg.com/faster-gaussian-blur-in-glsl/
  */
+
 
 
 precision mediump float;

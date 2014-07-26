@@ -1,3 +1,8 @@
+/**
+ * Wong Lok
+ * @wonglok831
+ * Fan Fragment Shader
+ */
 precision mediump float;
 
 uniform sampler2D uSampler;

@@ -1,3 +1,8 @@
+/**
+ * Wong Lok
+ * @wonglok831
+ * Fran Vertex Shader
+ */
 attribute vec3 aVertexPosition;
 attribute vec2 aTextureCoord;
 

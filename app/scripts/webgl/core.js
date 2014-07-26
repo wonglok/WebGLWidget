@@ -462,6 +462,40 @@
 	});
 
 
+	/**
+	 * check support of webgl
+	 * @return {[type]} [description]
+	 */
+	_di.val('fac.check',function(){
+		var check = {};
+		var gl = _di.get('context');
+
+		var vertexSampler = (
+			gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS) >= 1
+		);
+
+		var floatTexture = (
+			!!gl.getExtension( 'OES_texture_float' )
+		);
+
+		//if any of the stuff is not supported, then dont use this. :)
+		if (!vertexSampler || !floatTexture ) {
+			check.gpuSim = false;
+		}else{
+			check.gpuSim = true;
+		}
+
+		return check;
+	});
+
+	/**
+	 * Service for support
+	 * @return {[type]} [description]
+	 */
+	_di.set('service.support',function(){
+		return _di.get('fac.check')();
+	});
+
 
 	/**
 	 * Lgo fan
@@ -755,7 +789,7 @@
 			_c.eTime = false;
 			return false;
 		};
-		_c.resetTimer = function(){
+		_c.resetTime = function(){
 			_c.lastTime = 0;
 			_c.sTime = 0;
 		};
@@ -1049,6 +1083,7 @@
 		};
 
 		//debug
+
 		gl.lazy = api.lazy._f;
 		return gl;
 

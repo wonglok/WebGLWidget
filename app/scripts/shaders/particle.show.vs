@@ -1,3 +1,9 @@
+/**
+ * Wong Lok
+ * @wonglok831
+ * Particle Show Vertex Shader - Sampler2D Vertex
+ */
+
 attribute vec3 aVertexPosition;
 
 uniform mat4 uMVMatrix;

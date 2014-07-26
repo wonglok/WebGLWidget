@@ -1,3 +1,9 @@
+/**
+ * Wong Lok
+ * @wonglok831
+ * Cube Fragmnet Shader
+ */
+
 precision mediump float;
 varying vec2 vTextureCoord;
 uniform float uTimer;

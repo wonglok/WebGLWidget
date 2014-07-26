@@ -1,52 +1,70 @@
 (function(_di){
 	'use strict';
 
-
-
 	_di.set('renderable.gpu.particle.show',function(){
 		var gl = _di.get('context');
 		var _lg = _di.get('service.lazyGL');
 		var clock = _di.get('service.clock');
 		// var frbt = _di.get('service.frbt');
 
+
+
+
 		var mvStack = _di.get('util.mvStack')();
 		var degToRad = _di.get('util.degToRad');
-
 		var keyDownMap = _di.get('service.keydown');
-
-		var location = _di.get('program.particle.show');
-
 		var postProcess = _di.get('service.postProcess');
-
 
 
 		var api = {};
 
-		var width = gl.viewportWidth;
-		var height = gl.viewportHeight;
 
 		api.type = 'GpuParticle';
+
 
 		/**
 		 * Simulate the Particle
 		 * @param {[type]} parent [description]
 		 */
-		function GpuSimulator(parent){
+		function GpuSimulator(){
 			//pingpong fbo
 			this.rttFBO1 = _di.get('util.makeFloatFBO')();
 			this.rttFBO2 = _di.get('util.makeFloatFBO')();
+
 
 			this.currentFBO = null;
 			this.pingPongIndex = 0;
 
 			this.location = _di.get('program.particle.simulate');
 
-			this.parent = parent;
-
+			this.prebind = {
+				updateMode: this.updateMode.bind(this),
+			};
 
 		}
 
+		// GpuSimulator.prototype.clear = function(){
+		// 	// _lg.clearColor(0.2, 0.2, 0.2, 1);
+		// 	// clock.resetTime();
+
+		// 	// this.rttFBO1.bindFrameBuffer();
+		// 	// gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+		// 	// this.rttFBO1.unbindFrameBuffer();
+
+		// 	// this.rttFBO2.bindFrameBuffer();
+		// 	// gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+		// 	// this.rttFBO2.unbindFrameBuffer();
+		// };
+
+
+		GpuSimulator.prototype.updateMode = function(mode){
+			_lg.useProgram(this.location.program);
+			_lg.uniform1i(this.location.uMode, mode || 1);
+		};
+
 		GpuSimulator.prototype.simulate = function(){
+
+
 			var readFBO;
 			var writeFBO;
 
@@ -60,17 +78,20 @@
 			this.currentFBO = writeFBO;
 			//this.pingPongIndex++;
 
-
 			//save to framebuffer
 			writeFBO.bindFrameBuffer();
 
 			//draw paricle position to quad
 			writeFBO.bindPostProcess(this.location);
+
+			// this.updateMode();
+
 			writeFBO.draw(this.location);
+			this.location.simulate();
 
 			//update
-			this.location.simulate();
 			writeFBO.unbindFrameBuffer();
+
 		};
 
 
@@ -80,21 +101,31 @@
 		 * Display the Particle
 		 */
 		function GpuParticle(){
+
+			this.location = _di.get('program.particle.show');
+
 			this.particleBuffer = null;
 			this.particle = null;
 
 			this.keyDown = keyDownMap;
-			this.zoom = -332.5;
 			this.tiltY = 28.5;
 			this.tiltX = 127;
+			this.zoom = -332.5;
 
 			this.gpuSim = new GpuSimulator(this);
 
 			this.prebind = {
-				draw: this.draw.bind(this)
+				draw: this.draw.bind(this),
+				render: this.render.bind(this)
 			};
+
+
 		}
 		GpuParticle.prototype.makeParticle = function(){
+
+			var width = gl.viewportWidth;
+			var height = gl.viewportHeight;
+
 
 			var i = 0, len = width*height / 5;
 			var array = [];
@@ -166,15 +197,13 @@
 			this.initGraphics();
 		};
 
+
 		GpuParticle.prototype.draw = function(){
-
-
-			_lg.useProgram(location.program);
+			_lg.useProgram(this.location.program);
 
 			_lg.disable(gl.DEPTH_TEST);
 			_lg.enable(gl.BLEND);
 			_lg.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
 			_lg.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 
 			_lg.clearColor(0.2, 0.2, 0.2, 1);
@@ -182,7 +211,7 @@
 
 			/* global mat4 */
 			mat4.perspective(mvStack.pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0);
-			_lg.uniformMatrix4fv(location.uPMatrix, false, mvStack.pMatrix);
+			_lg.uniformMatrix4fv(this.location.uPMatrix, false, mvStack.pMatrix);
 
 			mvStack.mvSave();
 
@@ -192,25 +221,25 @@
 			mat4.rotate(mvStack.mvMatrix, mvStack.mvMatrix, degToRad(this.tiltY), [1.0, 0.0, 0.0]);
 			mat4.rotate(mvStack.mvMatrix, mvStack.mvMatrix, degToRad(this.tiltX), [0.0, 1.0, 0.0]);
 
-			_lg.uniformMatrix4fv(location.uMVMatrix, false, mvStack.mvMatrix);
+
+			_lg.uniformMatrix4fv(this.location.uMVMatrix, false, mvStack.mvMatrix);
 			mvStack.mvRestore();
 
 
-
-			//
 			_lg.activeTexture(gl.TEXTURE0);
 			_lg.bindTexture(gl.TEXTURE_2D, this.gpuSim.currentFBO.rttTexture);
-			_lg.uniform1i(location.uSampler, 0);
+			_lg.uniform1i(this.location.uSampler, 0);
 
 
 			//make sure geometry of particle is ready
 			_lg.lazy.vertexAttribPointer(
 				gl.ARRAY_BUFFER, this.particleBuffer,
-				location.aVertexPosition, this.particleBuffer.itemSize, gl.FLOAT, false, 0, 0
+				this.location.aVertexPosition, this.particleBuffer.itemSize, gl.FLOAT, false, 0, 0
 			);
 
+
 			//time :)
-			gl.uniform1f(location.uTimer, clock.sTime * 500);
+			gl.uniform1f(this.location.uTimer, clock.sTime * 500);
 
 
 			gl.drawArrays(gl.POINTS, 0, this.particleBuffer.numItems);
@@ -253,7 +282,9 @@
 			ohParticle = new GpuParticle();
 			ohParticle.init();
 
-			api.render = ohParticle.render.bind(ohParticle);
+			api.updateMode = ohParticle.gpuSim.prebind.updateMode;
+			api.render = ohParticle.prebind.render;
+
 			return api;
 		};
 

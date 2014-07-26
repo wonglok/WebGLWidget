@@ -18,6 +18,7 @@
 		var height = gl.viewportHeight;
 		var word = _di.get('const');
 
+
 		/**
 		 * make texture to store color
 		 * @type {[type]}
@@ -108,6 +109,7 @@
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, planeGeoPosBuff);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(planeGeoPosBuff.logoVertex), gl.STATIC_DRAW);
+		gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
 
 		/**
@@ -129,6 +131,7 @@
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, planeTexPosBuff);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(planeTexPosBuff.textureCoords), gl.STATIC_DRAW);
+		gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
 
 
@@ -169,6 +172,10 @@
 		api.draw = function(location){
 			_lg.useProgram(location.program);
 			gl.drawArrays(gl.TRIANGLES, 0, planeGeoPosBuff.numItems);
+		};
+
+		api.clear = function(){
+
 		};
 
 

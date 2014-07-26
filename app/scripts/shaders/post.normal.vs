@@ -1,3 +1,9 @@
+/**
+ * Wong Lok
+ * @wonglok831
+ * Normal Quad Vertex Shader - Post Process
+ */
+
 
 attribute vec2 aVertexPosition;
 attribute vec2 aTextureCoord;

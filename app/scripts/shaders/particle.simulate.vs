@@ -1,3 +1,9 @@
+/**
+ * Wong Lok
+ * @wonglok831
+ * Particle Simulate Vertex Shader - GPU Simulation
+ */
+
 
 attribute vec2 aVertexPosition;
 attribute vec2 aTextureCoord;

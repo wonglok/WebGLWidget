@@ -1,3 +1,8 @@
+/**
+ * Wong Lok
+ * @wonglok831
+ * Cube Vertex Shader
+ */
 attribute vec3 aVertexPosition;
 attribute vec2 aTextureCoord;
 

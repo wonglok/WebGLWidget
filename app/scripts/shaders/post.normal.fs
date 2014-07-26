@@ -1,3 +1,8 @@
+/**
+ * Wong Lok
+ * @wonglok831
+ * Normal Quad Fragment Shader - Post Process
+ */
 
 
 precision mediump float;

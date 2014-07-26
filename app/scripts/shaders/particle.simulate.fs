@@ -1,6 +1,8 @@
-//@wonglok831
-//particle.simulate.fs
-
+/**
+ * Wong Lok
+ * @wonglok831
+ * Particle Simulate Fragment Shader - GPU Simulation
+ */
 
 precision highp float;
 
@@ -22,17 +24,26 @@ float rand(vec2 co){
 	) * 2342.0);
 }
 
+uniform int uMode;
+
 void main() {
 
-	float opacity = 0.0315;
+	int mode;
+
+	if (uMode != 0){
+		mode = uMode;
+	}else{
+		mode = 1;
+	}
 
 
-	vec4 nextPos = vec4(opacity);
+	float opacity = 0.032;
+	vec4 nextPos = vec4(opacity,opacity,opacity,opacity);
 
 	vec4 lastPos = texture2D(uSampler, vTextureCoord);
 
 
-	float randomVal = rand(vec2(
+	float rVal = rand(vec2(
 		vTextureCoord.x,
 		vTextureCoord.y
 	 ));
@@ -41,35 +52,56 @@ void main() {
 	float cosTime = cos(uTimer / 500.0);
 	float tanTime = tan(uTimer / 500.0);
 
-	vec4 nowPos = vec4(
-		sinTime * sin(uTimer * vTextureCoord.s / 1000.0),
-		cosTime * cos(uTimer * vTextureCoord.t / 1000.0),
-		sinTime * sin(uTimer * 1.0),
+
+	vec4 fSpace = vec4(
+		sinTime * sin(uTimer * rVal + vTextureCoord.s),
+		cosTime * cos(uTimer * rVal + vTextureCoord.t),
+		cosTime * sinTime * tan(uTimer * rVal),
 		opacity
 	);
 
+	// mode = 4;
 
-	vec4 nowPos2 = vec4(
-		sinTime * sin(uTimer * randomVal + vTextureCoord.s),
-		cosTime * cos(uTimer * randomVal + vTextureCoord.t),
-		cosTime * sinTime * tan(uTimer * randomVal),
-		opacity
-	);
+	if (mode == 1){
+		nextPos = fSpace;
+	} else if (mode == 2) {
+
+		vec4 fEdge = vec4(
+			sinTime * sin(uTimer * vTextureCoord.s / 1000.0),
+			cosTime * cos(uTimer * vTextureCoord.t / 1000.0),
+			sinTime * sin(uTimer * 1.0 / rVal),
+			opacity
+		);
+
+		nextPos = fSpace;
+		nextPos += fEdge;
+	} else if (mode == 3){
+
+		nextPos = vec4(
+			sinTime * sin(uTimer * rVal + vTextureCoord.s),
+			cosTime * cos(uTimer * rVal + vTextureCoord.t),
+			tanTime * sinTime * sin(uTimer * rVal),
+			opacity
+		);
+
+	} else if (mode == 4){
+
+		nextPos = vec4(
+			sinTime * cos(uTimer * rVal + vTextureCoord.s),
+			cosTime * cos(uTimer * rVal + vTextureCoord.t),
+			tanTime * sin(uTimer / rVal),
+			opacity
+		);
+
+	}
 
 
-	nextPos = nowPos2;
-
-
-	//nextPos += nowPos;
 
 
 	nextPos += lastPos;
 	gl_FragColor = nextPos;
 
 }
-
-
-
 
 
 

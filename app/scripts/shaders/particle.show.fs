@@ -1,3 +1,9 @@
+/**
+ * Wong Lok
+ * @wonglok831
+ * Particle Show Fragment Shader - Sampler2D Vertex
+ */
+
 precision mediump float;
 
 uniform sampler2D uSampler;
@@ -20,9 +26,9 @@ float rand(vec2 co){
 
 
 void main(void) {
-	float sinTime = sin( uTimer / 100.0);
-	float cosTime = cos( uTimer / 100.0);
-	float tanTime = tan( uTimer / 100.0);
+	float sinTime = sin(  uTimer / 100.0);
+	float cosTime = cos(  uTimer / 100.0);
+	float tanTime = tan(  uTimer / 100.0);
 
 	float randomNum =  rand( vec2( sinTime, cosTime) );
 	float randomNum2 = rand( vec2( cosTime, tanTime) );
