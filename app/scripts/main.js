@@ -1,116 +1,190 @@
 (function(_di){
 	'use strict';
 
+	_di.set('postProcessProgram',function(){
+		var api = {};
+
+		api.blur = _di.get('program.post.blur');
+		api.normal = _di.get('program.post.normal');
+		api.particleSim = _di.get('program.particle.simulate');
+
+		return api;
+	});
+	_di.set('renderables',function(){
+		var api = {};
+
+		api.logo = _di.get('renderable.logoFan').init();
+		api.cube = _di.get('renderable.cube').init();
+		api.particleShow = _di.get('renderable.gpu.particle.show').init();
+
+		return api;
+	});
+
+	_di.val('util.check',function(){
+		var check = {};
+		var gl = _di.get('context');
+
+		var vertexSampler = (
+			gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS) >= 1
+		);
+
+		var floatTexture = (
+			!!gl.getExtension( 'OES_texture_float' )
+		);
+
+		//if any of the stuff is not supported, then dont use this. :)
+		if (!vertexSampler || !floatTexture ) {
+			check.gpuSim = false;
+		}else{
+			check.gpuSim = true;
+		}
+
+
+
+		return check;
+	});
+
+	_di.set('service.support',function(){
+		return _di.get('util.check')();
+	});
+
 	_di.set('stages',function(){
-		var stg = _di.get('renderable.logoFan');
-		var cube = _di.get('renderable.cube');
-
-
-		var post = {
-			blur: _di.get('program.post.blur'),
-			normal: _di.get('program.post.normal'),
-		};
-
-		stg.init();
-		cube.init();
-
-		var scene, postProcess;
-		scene = [
-			cube,
-			stg,
-			cube,
-			stg
-		];
-		postProcess = [
-			post.blur,
-			post.blur,
-			false,
-			post.normal
-		];
-
-
-		scene = [cube];
-		postProcess = [post.normal];
-
-		var stage = {
-			current:{
-				index: 0,
-				renderer:null,
-				postProcess: null
+		var post = _di.get('postProcessProgram');
+		var ren = _di.get('renderables');
+		var support = _di.get('service.support');
+		var scene = [
+			{
+				mod: ren.cube,
+				post: post.blur
 			},
+
+			{
+				mod: ren.particleShow,
+				post: post.blur
+			},
+			{
+				mod: ren.particleShow,
+				post: null
+			},
+
+			{
+				mod: ren.logo,
+				post: post.blur
+			},
+
+			{
+				mod: ren.particleShow,
+				post: null
+			},
+			{
+				mod: ren.cube,
+				post: null
+			},
+			{
+				mod: ren.logo,
+				post: post.blur
+			},
+
+		];
+
+		//debugger;
+
+		if (!support.gpuSim){
+			scene.shift();
+		}
+
+		//debug
+		scene = [scene[2]];
+
+		var stages = {
+			currentIndex: 0,
+			now: scene[0],
+			ren: ren,
+			post: post
 		};
 
 		var i = 0;
-
-		function switchStage(){
-			stage.current.index = i++;
-
-			stage.current.renderer = scene[stage.current.index];
-			stage.current.postProcess = postProcess[stage.current.index];
+		function changeNow(){
+			stages.currentIndex = i++;
+			stages.now = scene[stages.currentIndex];
 
 			if (i >= scene.length){
 				i = 0;
 			}
 		}
-		switchStage();
+		changeNow();
 
-		setInterval(switchStage,2500);
+		setInterval(changeNow,3000);
 
-		return stage;
+		return stages;
 	});
 
-	_di.set('render.fbo1',function(){
+	_di.set('render.post.fbo1',function(){
 		var rttFBO = _di.get('util.makeFBO')();
 		return rttFBO;
 	});
 
-	_di.set('render.fbo2',function(){
-		var rttFBO = _di.get('util.makeFBO')();
+	_di.set('service.postProcess',function(){
+		var fbo = _di.get('util.makeFBO')();
+		var api = {};
+
+		api.renderPass = function(drawFn,postProcess){
+			if (postProcess && postProcess.type === 'blur'){
+
+				fbo.bindFrameBuffer();
+
+				drawFn();
+
+				fbo.unbindFrameBuffer();
+				fbo.bindPostProcess(postProcess);
+				postProcess.simulate();
+				fbo.draw(postProcess);
+
+			}else{
+				drawFn();
+			}
+		};
+
+		return api;
+	});
+
+	_di.val('util.makeFloatFBO',function(){
+		var words = _di.get('const');
+		var rttFBO = _di.get('util.makeFBO')({
+			textureType: words.FloatType
+		});
 		return rttFBO;
 	});
+
+
 
 	_di.set('render',function(){
 		var stages = _di.get('stages');
-		var rttFBO1 = _di.get('render.fbo1');
+
+		var postProcess = _di.get('service.postProcess');
 
 		var render = function(){
-
-			var current = stages.current;
-
+			var now = stages.now;
 
 			/*jslint bitwise: true */
 			// gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-			if (current.postProcess && current.postProcess.type === 'particle'){
 
-			}else if (
-				current.postProcess && current.postProcess.type === 'blur' ||
-				current.postProcess && current.postProcess.type === 'normal'
+			if (
+				now.mod && now.mod.type === 'GpuParticle'
 			){
-				//set to fbo
-				rttFBO1.bindFrameBuffer();
-				//render,
-				current.renderer.render();
-
-				//rtt texutre is filled then.
-				//resume default fbo
-				rttFBO1.unbindFrameBuffer();
-
-				//bind the post pcrocessing program
-				rttFBO1.bindPostProcess(current.postProcess);
-
-				//update time
-				current.postProcess.simulate();
-
-				//draw the rtt texture to fullscreen quad
-				rttFBO1.draw();
-
+				now.mod.render(now.post);
+			} else if (
+				now.post && now.post.type === 'blur' ||
+				now.post && now.post.type === 'normal'
+			){
+				postProcess.renderPass(now.mod.render, now.post);
 			}else{
-				//omg omg omg
-				current.renderer.render();
+				now.mod.render();
 			}
 
 		};
 
+		// var frbt = _di.get('service.frbt');
 		// var addRender = function(){
 		// 	frbt.addTask(render);
 		// };
@@ -131,6 +205,7 @@
 
 		_di.get('canvas');
 		_di.get('context');
+		_di.get('service.contextLost');
 		//_di.get('service.focus');
 
 		_di.get('loop').start();

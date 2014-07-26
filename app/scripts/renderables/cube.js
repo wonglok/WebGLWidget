@@ -10,8 +10,6 @@
 		var frbt = _di.get('service.frbt');
 
 		var mvStack = _di.get('util.mvStack')();
-		var pMatrix = mat4.create();
-
 		var degToRad = _di.get('util.degToRad');
 
 
@@ -131,13 +129,11 @@
 
 
 
-
 		function createTexture(index, src) {
 			var newTexture = gl.createTexture();
 			newTexture.$index = index || 0;
 			newTexture.$image = new Image();
 			newTexture.$image.onload = function () {
-
 
 				frbt.addTask(function(){
 					_lg.useProgram(location.program);
@@ -176,13 +172,14 @@
 			_lg.disable(gl.BLEND);
 			_lg.enable(gl.DEPTH_TEST);
 
+
 			_lg.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 
 			_lg.clearColor(1.0, 1.0, 1.0, 1);
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-			mat4.perspective(pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
-			_lg.uniformMatrix4fv(location.uPMatrix, false, pMatrix);
+			mat4.perspective(mvStack.pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
+			_lg.uniformMatrix4fv(location.uPMatrix, false, mvStack.pMatrix);
 
 
 			mvStack.mvSave();
@@ -212,9 +209,6 @@
 			// _lg.bindBuffer(gl.ARRAY_BUFFER, cVTBO);
 			// _lg.vertexAttribPointer(location.aTextureCoord, cVTBO.itemSize, gl.FLOAT, false, 0, 0);
 
-			// _lg.activeTexture(gl.TEXTURE0 + cubeTexture.$index);
-			// _lg.bindTexture(gl.TEXTURE_2D, cubeTexture);
-
 
 			if(cubeTexture.$ready){
 				_lg.activeTexture(gl.TEXTURE0);
@@ -225,14 +219,15 @@
 				_lg.uniform1i(location.uSReady, 0);
 			}
 
-			gl.uniform1f(location.uCTime, clock.sTime.toFixed(5) * 500);
+			//debugger;
+
+			gl.uniform1f(location.uTimer, ((clock.sTime * 256) % 2200) );
 
 			_lg.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cIBO);
 			if (cubeTexture.$ready){
 				gl.drawElements(gl.TRIANGLES, cIBO.numItems, gl.UNSIGNED_SHORT, 0);
 			}else{
 				gl.drawElements(gl.TRIANGLES, cIBO.numItems, gl.UNSIGNED_SHORT, 0);
-// 				gl.drawElements(gl.LINE_LOOP, cIBO.numItems, gl.UNSIGNED_SHORT, 0);
 			}
 
 		}
@@ -246,19 +241,19 @@
 			cube.rotation.z += (90 * eTime) / 1000.0;
 		}
 
-		function render(){
+		var api = {};
+
+		api.render = function (){
 			_updateGLStateMachine();
 			_updateSimulation();
-		}
-
-		function init(){
-
-		}
-
-		return {
-			render: render,
-			init: init
 		};
+
+		api.init = function (){
+
+			return api;
+		};
+
+		return api;
 	});
 
 }(window._di));

@@ -51,8 +51,6 @@
 				location.aTextureCoord, this.parent.logoVTCBO.itemSize, gl.FLOAT, false, 0, 0
 			);
 
-
-
 			_lg.uniformMatrix4fv(location.uMVMatrix, false, mvStack.mvMatrix);
 
 			if (this.parent.logoTexture.$ready){
@@ -199,29 +197,41 @@
 		};
 		LogoGroup.prototype.drawAllLogo = function() {
 			_lg.useProgram(location.program);
-			_lg.clearColor(0.0, 0.0, 0.0, 1);
-			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 			_lg.disable(gl.DEPTH_TEST);
 			_lg.enable(gl.BLEND);
 			_lg.blendFunc(gl.SRC_ALPHA, gl.ONE);
 
+
+
+
 			_lg.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+
+			_lg.clearColor(0.0, 0.0, 0.0, 1);
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+
+			//perspective.
 			mat4.perspective(mvStack.pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
 			_lg.uniformMatrix4fv(location.uPMatrix, false, mvStack.pMatrix);
 
+
+			//mv matrix
 			mat4.identity(mvStack.mvMatrix);
 			mat4.translate(mvStack.mvMatrix, mvStack.mvMatrix, [0.0, 0.0, this.zoom]);
 			mat4.rotate(mvStack.mvMatrix, mvStack.mvMatrix, degToRad(this.tilt), [1.0, 0.0, 0.0]);
 
+			//scale the object
 			mat4.scale(mvStack.mvMatrix, mvStack.mvMatrix, [1.0, 1.0, 1.0]);
 
-			this.v8Each(this.logoFan,Logo.prototype.draw);
 
-			// var logoFan = this.logoFan,i = 0, slen = logoFan.length;
-			// for (;i<slen; i++){
-			// 	logoFan[i].draw();
-			// }
+			//draw all itme
+			// this.v8Each(this.logoFan,Logo.prototype.draw);
+
+			var logoFan = this.logoFan,i = 0, slen = logoFan.length;
+			for (;i<slen; i++){
+				logoFan[i].draw();
+			}
 		};
 		LogoGroup.prototype.simulate = function(){
 			var eTime = clock.eTime;
@@ -236,24 +246,24 @@
 			this.simulate();
 
 
-
 		};
 
+		var api = {};
 		var logoGroup;
 
-		function init(){
+		api.init = function(){
 			logoGroup = new LogoGroup();
 			logoGroup.init();
-		}
-
-		function render(){
-			logoGroup.render();
-		}
-
-		return {
-			init: init,
-			render: render
+			return api;
 		};
+
+		api.render = function(){
+			logoGroup.render();
+		};
+
+
+
+		return api;
 	});
 
 }(window._di));

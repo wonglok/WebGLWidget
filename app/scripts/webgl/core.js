@@ -21,19 +21,19 @@
 
 		//prep
 		var _f = _di.get('util.pool')();
-        _f._fac = function(){
-            return mat4.create();
-        };
-        _f._reset = function(o){
-        	o.___next = null;
-        	o.___prev = null;
-        	return mat4.identity(o);
-        };
-        _f.prep(3);
+		_f._fac = function(){
+			return mat4.create();
+		};
+		_f._reset = function(o){
+			o.___next = null;
+			o.___prev = null;
+			return mat4.identity(o);
+		};
+		_f.prep(3);
 
-        var api = {};
+		var api = {};
 
-        var DoublyLinkedList = _di.get('DoublyLinkedList');
+		var DoublyLinkedList = _di.get('DoublyLinkedList');
 		var stack = new DoublyLinkedList();
 
 		var mvMatrixStack = stack;//[];
@@ -191,7 +191,7 @@
 	});
 
 
-	//// push pop model, with doubly linked list :)
+	// push pop model, with doubly linked list :)
 	_di.val('util.pool',function freelist(){
 		var DoublyLinkedList = _di.get('DoublyLinkedList');
 		var stack = new DoublyLinkedList();
@@ -242,13 +242,12 @@
 	});
 
 
-	//set free model
+	// //set free model
 	// _di.val('util.pool',function (factory,reset){
 	// 	var _f = {
 
 	// 		_free: [],
 	// 		_pool: [],
-
 	// 		_fac:factory,
 	// 		_reset:reset,
 
@@ -533,6 +532,54 @@
 		return locationCache;
 	});
 
+	/**
+	 * particle random simulator
+	 * @return {[type]} [description]
+	 */
+	_di.set('program.particle.simulate',function(){
+		var getLocationCache = _di.get('util.getLocationCache');
+
+		var program = _di.get('util.makeProgramFromSrc')(
+			_di.get('scripts/shaders/particle.simulate.vs'),
+			_di.get('scripts/shaders/particle.simulate.fs')
+		);
+		var locationCache = getLocationCache(program);
+
+		var clock = _di.get('service.clock');
+		var gl = _di.get('context');
+
+		locationCache.type = 'particle';
+		locationCache.simulate = function(){
+			gl.uniform1f(locationCache.uTimer,clock.cTime);
+		};
+
+		return locationCache;
+	});
+
+	/**
+	 * particle random simulator
+	 * @return {[type]} [description]
+	 */
+	_di.set('program.particle.show',function(){
+		var getLocationCache = _di.get('util.getLocationCache');
+
+		var program = _di.get('util.makeProgramFromSrc')(
+			_di.get('scripts/shaders/particle.show.vs'),
+			_di.get('scripts/shaders/particle.show.fs')
+		);
+		var locationCache = getLocationCache(program);
+
+		var clock = _di.get('service.clock');
+		var gl = _di.get('context');
+
+		locationCache.type = 'particle';
+		locationCache.simulate = function(){
+			gl.uniform1f(locationCache.uTimer,clock.cTime);
+		};
+
+		return locationCache;
+	});
+
 
 	/**
 	 * post processing blurrrrr
@@ -551,6 +598,7 @@
 
 		locationCache.type = 'blur';
 		locationCache.simulate = function(){
+			//vibe
 			gl.uniform1f(locationCache.uVibrate,Math.sin(clock.eTime+clock.sTime*10));
 		};
 
@@ -571,13 +619,33 @@
 	 * 3d graphics context
 	 * @return {[type]} [description]
 	 */
-	_di.set('context',function(){
+	_di.val('util.makeContext',function(){
 		var canvas = _di.get('canvas');
 		var context = canvas.getContext('webgl');
 		context.viewportWidth = canvas.width;
 		context.viewportHeight = canvas.height;
 		return context;
 	});
+	_di.set('context',function(){
+		return _di.get('util.makeContext')();
+	});
+	_di.set('service.contextLost',function(){
+		var canvas = _di.get('canvas');
+		var loop = _di.get('loop');
+
+		canvas.addEventListener('webglcontextlost', function(event) {
+			event.preventDefault();
+			console.log('context lost!');
+
+			loop.stop();
+		}, false);
+
+		canvas.addEventListener('webglcontextrestored', function() {
+			window.location.assign(window.location.href);
+		}, false);
+
+	});
+
 
 
 	/**
@@ -670,7 +738,8 @@
 		_c.eTime = 0; //elapsted time 16~17
 		_c.sTime = 0; //stepping time
 		_c.now = function(cTime){
-			return cTime || window.performance.now() || Date.now() || new Date().getTime();
+			var time = cTime || window.performance.now() || Date.now() || new Date().getTime();
+			return time;
 		};
 		_c.updateTime = function(cTime){
 			_c.cTime = _c.now(cTime);
@@ -679,7 +748,6 @@
 				_c.eTime = elapsed;
 				_c.lastTime = _c.cTime;
 				_c.sTime = _c.sTime + 0.01;
-
 				return elapsed;
 			}
 
@@ -711,7 +779,7 @@
 
 
 	/**
-	 *
+	 * make lazy GL.
 	 * @return {[type]} [description]
 	 */
 	_di.val('util.lazyGL',function(){
@@ -793,6 +861,10 @@
 		api.uniformMatrix4fv = function(a0, a1, a2) {
 			var ns = a0.___uniformName;
 
+			if (!ns){
+				throw new Error('cannot find unifrom name');
+			}
+
 			if(
 				!(
 					uniformMatrix4fv[ns+uniformMatrix4fv.NS1] === a1 &&
@@ -817,7 +889,7 @@
 		api.ask.vertexAttribPointer = function(a0,a1,a2,a3,a4,a5){
 			if (!vertexAttribPointer[a0]){
 				if (a0 === -1 || typeof a0 === 'undefined'){
-					throw new Error('location undefined:'+a0);
+					throw new Error('location not found!!: '+a0);
 				}
 				vertexAttribPointer[a0] = {};
 			}
@@ -977,12 +1049,13 @@
 			}
 		};
 
-
+		//debug
 		// gl.lazy = api.lazy._f;
 		// return gl;
 
 		return api;
 	});
+
 
 	_di.set('service.lazyGL',function(){
 		return _di.get('util.lazyGL')();

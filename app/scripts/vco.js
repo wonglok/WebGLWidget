@@ -10,16 +10,13 @@
 
 	function nsR(){
 		var _di = {
-			ns: {},
 			fac: {},
 			inst: {},
 			//setters
 			val: function(name,val){
-				_di.ns[name] = name;
 				_di.inst[name] = val;
 			},
 			set: function(name,factory){
-				_di.ns[name] = name;
 				_di.inst[name] = null;
 				_di.fac[name] = factory;
 			},

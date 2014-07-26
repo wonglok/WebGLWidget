@@ -1,13 +1,22 @@
 (function(_di){
 	'use strict';
+	_di.set('const',function(){
+		var constant = {
+			FloatType:'FloatType'
+		};
+		return constant;
+	});
 
-	_di.val('util.makeFBO',function(){
+	_di.val('util.makeFBO',function(options){
+		options = options || {};
+
 		var api = {};
 
 		var _lg = _di.get('service.lazyGL');
 		var gl = _di.get('context');
 		var width = gl.viewportWidth;
 		var height = gl.viewportHeight;
+		var word = _di.get('const');
 
 		/**
 		 * make texture to store color
@@ -15,6 +24,7 @@
 		 */
 		var rttTexture = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, rttTexture);
+
 		//dont use mig mag
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -25,8 +35,16 @@
 		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
 
-		//sample data
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+		if (options.type === word.FloatType){
+			//sample data
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, width, height, 0, gl.RGB, gl.UNSIGNED_BYTE, null);
+		}else{
+			//sample data
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+		}
+
+
+		api.rttTexture = rttTexture;
 
 		/**
 		 * make render buffer to store depth data
@@ -49,6 +67,26 @@
 		gl.bindTexture(gl.TEXTURE_2D, null);
 		gl.bindRenderbuffer(gl.RENDERBUFFER, null);
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+
+		/**
+		 * set drawing to frame bufer.
+		 * @param  {[type]} location [description]
+		 * @return {[type]}          [description]
+		 */
+		api.bindFrameBuffer = function(){
+			gl.bindFramebuffer(gl.FRAMEBUFFER, rttFrameBuffer);
+		};
+
+
+		/**
+		 * set drawing to screen
+		 * @return {[type]} [description]
+		 */
+		api.unbindFrameBuffer = function(){
+			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+		};
+
 
 
 		/**
@@ -92,30 +130,14 @@
 		gl.bindBuffer(gl.ARRAY_BUFFER, planeTexPosBuff);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(planeTexPosBuff.textureCoords), gl.STATIC_DRAW);
 
-		/**
-		 * set drawing to frame bufer.
-		 * @param  {[type]} location [description]
-		 * @return {[type]}          [description]
-		 */
-		api.bindFrameBuffer = function(){
-			gl.bindFramebuffer(gl.FRAMEBUFFER, rttFrameBuffer);
-		};
 
-
-		/**
-		 * set drawing to screen
-		 * @return {[type]} [description]
-		 */
-		api.unbindFrameBuffer = function(){
-			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-		};
 
 		/**
 		 * bind the post processing program
 		 * @param  {[type]} location [description]
 		 * @return {[type]}          [description]
 		 */
-		api.bindPostProcess = function(location){
+		api.bindPostProcess = function(location, texture){
 			_lg.useProgram(location.program);
 
 			// gl.bindBuffer(gl.ARRAY_BUFFER, planeGeoPosBuff);
@@ -135,7 +157,7 @@
 			);
 
 			_lg.activeTexture(gl.TEXTURE0);
-			_lg.bindTexture(gl.TEXTURE_2D, rttTexture);
+			_lg.bindTexture(gl.TEXTURE_2D, texture || rttTexture);
 			_lg.uniform1i(location.uSampler, 0);
 
 		};
@@ -144,15 +166,17 @@
 		 * api for drawing the plane
 		 * @return {[type]} [description]
 		 */
-		api.draw = function(){
+		api.draw = function(location){
+			_lg.useProgram(location.program);
 			gl.drawArrays(gl.TRIANGLES, 0, planeGeoPosBuff.numItems);
 		};
 
 
 
-
 		return api;
 	});
+
+
 
 
 }(window._di));
