@@ -95,7 +95,10 @@ module.exports = function (grunt) {
         ngtemplates:  {
             app:        {
                 cwd:      'app',
-                src:      'scripts/shaders/*',
+                src:      [
+                    'scripts/shaders/*',
+                    '!scripts/shaders/archive/'
+                ],
                 dest:     'app/scripts/shaders.js',
                 options:  {
                     bootstrap:  function(module, script) {

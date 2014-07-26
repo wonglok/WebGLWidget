@@ -39,8 +39,6 @@
 			check.gpuSim = true;
 		}
 
-
-
 		return check;
 	});
 

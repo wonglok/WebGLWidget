@@ -4,6 +4,7 @@ uniform sampler2D uSampler;
 
 uniform float uTimer;
 
+float opacity = 0.25;
 
 float rand(vec2 co){
     return fract(sin(
@@ -19,9 +20,9 @@ float rand(vec2 co){
 
 
 void main(void) {
-	float sinTime = sin(  uTimer / 100.0);
-	float cosTime = cos(  uTimer / 100.0);
-	float tanTime = tan(  uTimer / 100.0);
+	float sinTime = sin( uTimer / 100.0);
+	float cosTime = cos( uTimer / 100.0);
+	float tanTime = tan( uTimer / 100.0);
 
 	float randomNum =  rand( vec2( sinTime, cosTime) );
 	float randomNum2 = rand( vec2( cosTime, tanTime) );
@@ -29,5 +30,5 @@ void main(void) {
 
 	vec3 rgb = vec3(randomNum,randomNum2,randomNum3);
 
-	gl_FragColor = vec4(rgb, 1.0);
+	gl_FragColor = vec4(rgb, opacity);
 }

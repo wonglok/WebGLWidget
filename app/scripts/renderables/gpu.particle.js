@@ -27,7 +27,10 @@
 
 		api.type = 'GpuParticle';
 
-
+		/**
+		 * Simulate the Particle
+		 * @param {[type]} parent [description]
+		 */
 		function GpuSimulator(parent){
 			//pingpong fbo
 			this.rttFBO1 = _di.get('util.makeFloatFBO')();
@@ -70,6 +73,12 @@
 			writeFBO.unbindFrameBuffer();
 		};
 
+
+
+		/**
+		 * [GpuParticle description]
+		 * Display the Particle
+		 */
 		function GpuParticle(){
 			this.particleBuffer = null;
 			this.particle = null;
@@ -85,7 +94,6 @@
 				draw: this.draw.bind(this)
 			};
 		}
-
 		GpuParticle.prototype.makeParticle = function(){
 
 			var i = 0, len = width*height / 5;
@@ -165,7 +173,6 @@
 
 			_lg.disable(gl.DEPTH_TEST);
 			_lg.enable(gl.BLEND);
-
 			_lg.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
 			_lg.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);

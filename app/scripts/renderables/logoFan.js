@@ -12,7 +12,6 @@
 		var keyDownMap = _di.get('service.keydown');
 
 
-
 		function Logo(rSpeed, logoParent) {
 			this.rDegree = 0;
 			this.rSpeed = rSpeed;

@@ -751,7 +751,6 @@
 				return elapsed;
 			}
 
-
 			_c.lastTime = _c.cTime;
 			_c.eTime = false;
 			return false;
@@ -1050,8 +1049,8 @@
 		};
 
 		//debug
-		// gl.lazy = api.lazy._f;
-		// return gl;
+		gl.lazy = api.lazy._f;
+		return gl;
 
 		return api;
 	});
