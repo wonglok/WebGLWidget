@@ -50,26 +50,33 @@
 		var post = _di.get('postProcessProgram');
 		var ren = _di.get('renderables');
 		var support = _di.get('service.support');
-		var scene = [
+
+		var fallback = [
 			{
 				eng: ren.cube,
 				post: post.blur,
 				next: 4000
 			},
 			{
-				eng: ren.particle,
-				// post: post.blur,
-				mode: 1,
-				next: 2500
+				eng: ren.logo,
+				post: post.blur,
+				next: 4000
+			},
+		];
+		var scene = [
+			{
+				eng: ren.cube,
+				post: post.blur,
+				next: 3000
 			},
 			{
+				//sQuare
 				eng: ren.particle,
-				// post: post.blur,
-				mode: 1,
-				next: 2500
+				mode: 5,
+				next: 4000
 			},
-
 			{
+				//eEdge
 				eng: ren.particle,
 				post: post.blur,
 				mode: 2,
@@ -77,34 +84,40 @@
 			},
 
 			{
+				//sWave
+				eng: ren.particle,
+				mode: 1,
+				next: 4000
+			},
+			{
+				//corner
 				eng: ren.particle,
 				mode: 3,
 				next: 4000
 			},
-
 			{
-				eng: ren.logo,
-				post: post.blur,
+				//ball wave
+				eng: ren.particle,
+				mode: 4,
+				next: 4000
+			},
+			{
+				//eEdge
+				eng: ren.particle,
+				mode: 2,
 				next: 4000
 			},
 
 		];
 
 		if (!support.gpuSim){
-
+			scene = fallback;
 		}
 
-		// //debug
-		scene = [
-			scene[1],
-			scene[2],
-			scene[3]
-		];
-
-
 		var stages = {
-			currentIndex: 0,
 			now: null,
+
+			currentIndex: 0,
 			clear: true
 		};
 
@@ -112,10 +125,9 @@
 
 		var i = 0;
 		function changeNow(){
-			stages.currentIndex = i++;
-			stages.now = scene[stages.currentIndex];
+			stages.nowIndex = i++;
+			stages.now = scene[stages.nowIndex];
 			stages.clear = true;
-
 
 			if (stages.now.eng.updateMode){
 				frbt.addTask(
@@ -125,7 +137,6 @@
 				);
 
 				//stages.now.eng.updateMode(stages.now.mode);
-
 			}
 
 			if (i >= scene.length){
@@ -179,12 +190,13 @@
 
 		};
 
-		// var frbt = _di.get('service.frbt');
-		// var addRender = function(){
-		// 	frbt.addTask(render);
-		// };
+		var frbt = _di.get('service.frbt');
+		var addRender = function(){
+			frbt.addTask(render);
+		};
+		return addRender;
 
-		return render;
+		// return render;
 	});
 
 	_di.val('run',function(){

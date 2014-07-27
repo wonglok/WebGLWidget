@@ -162,7 +162,7 @@
 						}
 					}
 					timeLeft = (perf.now() - fStartTime);
-
+					this.pool.free(todo);
 				} while (
 					stack.length > 0 &&
 					(timeLeft < budget)
@@ -189,7 +189,6 @@
 		var FrbT = _di.get('FrbT');
 		return new FrbT();
 	});
-
 
 	// push pop model, with doubly linked list :)
 	_di.val('util.pool',function freelist(){
@@ -470,20 +469,34 @@
 		var check = {};
 		var gl = _di.get('context');
 
-		var vertexSampler = (
+		check.vertexSampler = (
 			gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS) >= 1
 		);
 
-		var floatTexture = (
+		check.floatTexture = (
 			!!gl.getExtension( 'OES_texture_float' )
 		);
 
 		//if any of the stuff is not supported, then dont use this. :)
-		if (!vertexSampler || !floatTexture ) {
+		if (!check.vertexSampler || !check.floatTexture ) {
 			check.gpuSim = false;
 		}else{
 			check.gpuSim = true;
 		}
+
+		if (
+			navigator.userAgent.match(/(iPod|iPhone|iPad)/)
+		){
+			var usrA= navigator.userAgent;
+			var info = usrA.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+			if (parseFloat(info[2],10) <= 9537){
+				check.gpuSim = false;
+			}
+		}
+
+		// console.log(check
+		// 	//[JSON.stringify(,null,'\t')]
+		// );
 
 		return check;
 	});

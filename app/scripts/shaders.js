@@ -222,7 +222,7 @@
     " */\n" +
     "\n" +
     "precision highp float;\n" +
-    "// precision mediump float;\n" +
+    "// precision lowp float;\n" +
     "\n" +
     "uniform sampler2D uSampler;\n" +
     "varying vec2 vTextureCoord;\n" +
@@ -255,8 +255,8 @@
     "\t}\n" +
     "\n" +
     "\n" +
-    "\tfloat opacity = 10.0 / 3.0 / 100.0 ;//0.033333;\n" +
-    "\tvec4 nextPos = vec4(opacity,opacity,opacity,opacity);\n" +
+    "\tfloat opacity = 0.05;\n" +
+    "\tvec4 nextPos = vec4(opacity);\n" +
     "\n" +
     "\tvec4 lastPos = texture2D(uSampler, vTextureCoord);\n" +
     "\n" +
@@ -278,12 +278,11 @@
     "\t\topacity\n" +
     "\t);\n" +
     "\n" +
-    "\t// mode = 4;\n" +
+    "\t// mode = 5;\n" +
     "\n" +
     "\tif (mode == 1){\n" +
     "\t\tnextPos = fSpace;\n" +
     "\t} else if (mode == 2) {\n" +
-    "\n" +
     "\t\tvec4 fEdge = vec4(\n" +
     "\t\t\tsinTime * sin(uTimer * vTextureCoord.s / 1000.0),\n" +
     "\t\t\tcosTime * cos(uTimer * vTextureCoord.t / 1000.0),\n" +
@@ -304,14 +303,26 @@
     "\n" +
     "\t} else if (mode == 4){\n" +
     "\n" +
-    "\t\tnextPos = vec4(\n" +
-    "\t\t\tsinTime * cos(uTimer * rVal + vTextureCoord.s),\n" +
-    "\t\t\tcosTime * cos(uTimer * rVal + vTextureCoord.t),\n" +
-    "\t\t\ttanTime * sin(uTimer / rVal),\n" +
+    "\t\tvec4 sEdge = vec4(\n" +
+    "\t\t\tsinTime * sin(uTimer * rVal + vTextureCoord.s),\n" +
+    "\t\t\tcosTime * sin(uTimer * rVal + vTextureCoord.t),\n" +
+    "\t\t\tcosTime * sin(uTimer * rVal),\n" +
     "\t\t\topacity\n" +
     "\t\t);\n" +
     "\n" +
+    "\t\tnextPos = sEdge;\n" +
+    "\t} else if (mode == 5){\n" +
+    "\n" +
+    "\t\tvec4 eSignal = vec4(\n" +
+    "\t\t\ttanTime * sin(uTimer * rVal * cosTime * vTextureCoord.s),\n" +
+    "\t\t\ttanTime * sin(uTimer * rVal * sinTime * vTextureCoord.t),\n" +
+    "\t\t\ttanTime * sin(uTimer * rVal * cosTime),\n" +
+    "\t\t\topacity\n" +
+    "\t\t);\n" +
+    "\n" +
+    "\t\tnextPos = eSignal;\n" +
     "\t}\n" +
+    "\n" +
     "\n" +
     "\n" +
     "\n" +
@@ -341,7 +352,7 @@
     "varying vec2 vTextureCoord;\n" +
     "\n" +
     "void main() {\n" +
-    "    vTextureCoord = vec2(aTextureCoord.x, aTextureCoord.y);\n" +
+    "    vTextureCoord = vec2(aTextureCoord.x, 1.0 - aTextureCoord.y);\n" +
     "    gl_Position = vec4(aVertexPosition, 0.0, 1.0);\n" +
     "}\n" +
     "\n" +

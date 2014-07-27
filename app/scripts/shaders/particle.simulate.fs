@@ -5,7 +5,7 @@
  */
 
 precision highp float;
-// precision mediump float;
+// precision lowp float;
 
 uniform sampler2D uSampler;
 varying vec2 vTextureCoord;
@@ -38,8 +38,8 @@ void main() {
 	}
 
 
-	float opacity = 10.0 / 3.0 / 100.0 ;//0.033333;
-	vec4 nextPos = vec4(opacity,opacity,opacity,opacity);
+	float opacity = 0.05;
+	vec4 nextPos = vec4(opacity);
 
 	vec4 lastPos = texture2D(uSampler, vTextureCoord);
 
@@ -61,12 +61,11 @@ void main() {
 		opacity
 	);
 
-	// mode = 4;
+	// mode = 5;
 
 	if (mode == 1){
 		nextPos = fSpace;
 	} else if (mode == 2) {
-
 		vec4 fEdge = vec4(
 			sinTime * sin(uTimer * vTextureCoord.s / 1000.0),
 			cosTime * cos(uTimer * vTextureCoord.t / 1000.0),
@@ -87,14 +86,26 @@ void main() {
 
 	} else if (mode == 4){
 
-		nextPos = vec4(
-			sinTime * cos(uTimer * rVal + vTextureCoord.s),
-			cosTime * cos(uTimer * rVal + vTextureCoord.t),
-			tanTime * sin(uTimer / rVal),
+		vec4 sEdge = vec4(
+			sinTime * sin(uTimer * rVal + vTextureCoord.s),
+			cosTime * sin(uTimer * rVal + vTextureCoord.t),
+			cosTime * sin(uTimer * rVal),
 			opacity
 		);
 
+		nextPos = sEdge;
+	} else if (mode == 5){
+
+		vec4 eSignal = vec4(
+			tanTime * sin(uTimer * rVal * cosTime * vTextureCoord.s),
+			tanTime * sin(uTimer * rVal * sinTime * vTextureCoord.t),
+			tanTime * sin(uTimer * rVal * cosTime),
+			opacity
+		);
+
+		nextPos = eSignal;
 	}
+
 
 
 

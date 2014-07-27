@@ -41,19 +41,22 @@
 				updateMode: this.updateMode.bind(this),
 			};
 
+
+			// setInterval(this.clear.bind(this),1000);
+
 		}
 
 		// GpuSimulator.prototype.clear = function(){
-		// 	// _lg.clearColor(0.2, 0.2, 0.2, 1);
-		// 	// clock.resetTime();
+		// 	_lg.clearColor(0.2, 0.2, 0.2, 1);
+		// 	clock.resetTime();
 
-		// 	// this.rttFBO1.bindFrameBuffer();
-		// 	// gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-		// 	// this.rttFBO1.unbindFrameBuffer();
+		// 	this.rttFBO1.bindFrameBuffer();
+		// 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+		// 	this.rttFBO1.unbindFrameBuffer();
 
-		// 	// this.rttFBO2.bindFrameBuffer();
-		// 	// gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-		// 	// this.rttFBO2.unbindFrameBuffer();
+		// 	this.rttFBO2.bindFrameBuffer();
+		// 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+		// 	this.rttFBO2.unbindFrameBuffer();
 		// };
 
 
@@ -85,19 +88,14 @@
 			//draw paricle position to quad
 			writeFBO.bindPostProcess(this.program,readFBO.rttTexture);
 
-			// this.updateMode();
-
 			this.program.simulate();
 
 			writeFBO.draw(this.program);
 
-
 			//update
 			writeFBO.unbindFrameBuffer();
 
-
 		};
-
 
 
 		/**
@@ -121,7 +119,6 @@
 			};
 
 
-
 			this.tiltX = 127;
 			this.tiltY = 28.5;
 
@@ -141,7 +138,7 @@
 			var height = gl.viewportHeight;
 
 
-			var i = 0, len = width*height / 5;
+			var i = 0, len = width*height / 3;
 			var array = [];
 
 			var x,y,z;
@@ -258,7 +255,6 @@
 				gl.ARRAY_BUFFER, this.particleBuffer,
 				this.program.aVertexPosition, this.particleBuffer.itemSize, gl.FLOAT, false, 0, 0
 			);
-
 
 
 			//update time.
