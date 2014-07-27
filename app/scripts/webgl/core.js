@@ -607,9 +607,9 @@
 		var gl = _di.get('context');
 
 		locationCache.type = 'particle';
-		locationCache.simulate = function(){
-			gl.uniform1f(locationCache.uTimer,clock.cTime);
-		};
+// 		locationCache.simulate = function(){
+// 			gl.uniform1f(locationCache.uTimer,clock.cTime);
+// 		};
 
 		return locationCache;
 	});
@@ -975,11 +975,29 @@
 
 		var bindTexture = {};
 		api.bindTexture = function(emTarget,objTexture){
+
+			// if (!emTarget){
+			// 	throw new Error('no emTarget');
+			// }
+
+			// if (!bindTexture[emTarget]){
+			// 	bindTexture[emTarget] = {};
+			// 	bindTexture[emTarget].
+			// }
+
+			// if (objTexture && objTexture.___type){
+			// 	// debugger;
+			// }
+
+			gl.bindTexture(emTarget,objTexture);
+
 			if(
+				bindTexture.program !== useProgram.program ||
 				bindTexture[emTarget] !== objTexture
 			){
-				gl.bindTexture(emTarget,objTexture);
+
 				bindTexture[emTarget] = objTexture;
+				bindTexture.program = useProgram.program;
 			}
 
 		};
@@ -1082,10 +1100,9 @@
 			}
 		};
 
-		//debug
 
-		gl.lazy = api.lazy._f;
-		return gl;
+		// gl.lazy = api.lazy._f;
+		// return gl;
 
 		return api;
 	});

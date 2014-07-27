@@ -5,6 +5,7 @@
  */
 
 precision highp float;
+// precision mediump float;
 
 uniform sampler2D uSampler;
 varying vec2 vTextureCoord;
@@ -37,7 +38,7 @@ void main() {
 	}
 
 
-	float opacity = 0.032;
+	float opacity = 10.0 / 3.0 / 100.0 ;//0.033333;
 	vec4 nextPos = vec4(opacity,opacity,opacity,opacity);
 
 	vec4 lastPos = texture2D(uSampler, vTextureCoord);

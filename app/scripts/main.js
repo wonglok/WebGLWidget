@@ -53,27 +53,39 @@
 		var scene = [
 			{
 				eng: ren.cube,
-				post: post.blur
+				post: post.blur,
+				next: 4000
 			},
 			{
 				eng: ren.particle,
+				// post: post.blur,
 				mode: 1,
+				next: 2500
+			},
+			{
+				eng: ren.particle,
+				// post: post.blur,
+				mode: 1,
+				next: 2500
 			},
 
 			{
 				eng: ren.particle,
 				post: post.blur,
-				mode: 2
+				mode: 2,
+				next: 4000
 			},
 
 			{
 				eng: ren.particle,
-				mode: 3
+				mode: 3,
+				next: 4000
 			},
 
 			{
 				eng: ren.logo,
-				post: post.blur
+				post: post.blur,
+				next: 4000
 			},
 
 		];
@@ -83,11 +95,11 @@
 		}
 
 		// //debug
-		// scene = [
-		// 	scene[1],
-		// 	scene[2],
-		// 	scene[3]
-		// ];
+		scene = [
+			scene[1],
+			scene[2],
+			scene[3]
+		];
 
 
 		var stages = {
@@ -120,7 +132,7 @@
 				i = 0;
 			}
 
-			setTimeout(changeNow, 4000);
+			setTimeout(changeNow, stages.now.next || 5000);
 		}
 		changeNow();
 

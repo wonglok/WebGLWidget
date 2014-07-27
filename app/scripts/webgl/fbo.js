@@ -24,7 +24,8 @@
 		 * @type {[type]}
 		 */
 		var rttTexture = gl.createTexture();
-		gl.bindTexture(gl.TEXTURE_2D, rttTexture);
+		rttTexture.___type = 'fbo';
+		_lg.bindTexture(gl.TEXTURE_2D, rttTexture);
 
 		//dont use mig mag
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -171,7 +172,11 @@
 		 */
 		api.draw = function(location){
 			_lg.useProgram(location.program);
+
 			gl.drawArrays(gl.TRIANGLES, 0, planeGeoPosBuff.numItems);
+
+			_lg.bindTexture(gl.TEXTURE_2D, null);
+
 		};
 
 		api.clear = function(){

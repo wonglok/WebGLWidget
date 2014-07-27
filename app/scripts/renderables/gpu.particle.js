@@ -27,7 +27,7 @@
 		 * @param {[type]} parent [description]
 		 */
 		function GpuSimulator(){
-			//pingpong fbo
+			//pingPongIndex fbo
 			this.rttFBO1 = _di.get('util.makeFloatFBO')();
 			this.rttFBO2 = _di.get('util.makeFloatFBO')();
 
@@ -35,7 +35,7 @@
 			this.currentFBO = null;
 			this.pingPongIndex = 0;
 
-			this.location = _di.get('program.particle.simulate');
+			this.program = _di.get('program.particle.simulate');
 
 			this.prebind = {
 				updateMode: this.updateMode.bind(this),
@@ -58,8 +58,8 @@
 
 
 		GpuSimulator.prototype.updateMode = function(mode){
-			_lg.useProgram(this.location.program);
-			_lg.uniform1i(this.location.uMode, mode || 1);
+			_lg.useProgram(this.program.program);
+			_lg.uniform1i(this.program.uMode, mode || 1);
 		};
 
 		GpuSimulator.prototype.simulate = function(){
@@ -76,21 +76,25 @@
 				readFBO = this.rttFBO2;
 			}
 			this.currentFBO = writeFBO;
-			//this.pingPongIndex++;
+			this.pingPongIndex++;
 
 			//save to framebuffer
 			writeFBO.bindFrameBuffer();
 
+
 			//draw paricle position to quad
-			writeFBO.bindPostProcess(this.location);
+			writeFBO.bindPostProcess(this.program,readFBO.rttTexture);
 
 			// this.updateMode();
 
-			writeFBO.draw(this.location);
-			this.location.simulate();
+			this.program.simulate();
+
+			writeFBO.draw(this.program);
+
 
 			//update
 			writeFBO.unbindFrameBuffer();
+
 
 		};
 
@@ -102,15 +106,12 @@
 		 */
 		function GpuParticle(){
 
-			this.location = _di.get('program.particle.show');
+			this.program = _di.get('program.particle.show');
 
 			this.particleBuffer = null;
 			this.particle = null;
 
 			this.keyDown = keyDownMap;
-			this.tiltY = 28.5;
-			this.tiltX = 127;
-			this.zoom = -332.5;
 
 			this.gpuSim = new GpuSimulator(this);
 
@@ -120,7 +121,20 @@
 			};
 
 
+
+			this.tiltX = 127;
+			this.tiltY = 28.5;
+
+			this.zoom = -332.5;
 		}
+		GpuParticle.prototype.simulate = function(){
+			this.tiltX %= 360;
+			this.tiltY %= 360;
+			this.tiltX -= 0.33 + ( Math.cos(clock.sTime) );
+			this.tiltY -= ( 1.0 - Math.sin(clock.sTime) ) / 2;
+		};
+
+
 		GpuParticle.prototype.makeParticle = function(){
 
 			var width = gl.viewportWidth;
@@ -199,19 +213,25 @@
 
 
 		GpuParticle.prototype.draw = function(){
-			_lg.useProgram(this.location.program);
+
+			//clear last screen
+			_lg.clearColor(0.2, 0.2, 0.2, 1);
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+
+			//porgram, view port.
+			_lg.useProgram(this.program.program);
 
 			_lg.disable(gl.DEPTH_TEST);
 			_lg.enable(gl.BLEND);
 			_lg.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 			_lg.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 
-			_lg.clearColor(0.2, 0.2, 0.2, 1);
-			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+			//camera, model view
 			/* global mat4 */
 			mat4.perspective(mvStack.pMatrix, 45, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0);
-			_lg.uniformMatrix4fv(this.location.uPMatrix, false, mvStack.pMatrix);
+			_lg.uniformMatrix4fv(this.program.uPMatrix, false, mvStack.pMatrix);
 
 			mvStack.mvSave();
 
@@ -222,27 +242,35 @@
 			mat4.rotate(mvStack.mvMatrix, mvStack.mvMatrix, degToRad(this.tiltX), [0.0, 1.0, 0.0]);
 
 
-			_lg.uniformMatrix4fv(this.location.uMVMatrix, false, mvStack.mvMatrix);
+			_lg.uniformMatrix4fv(this.program.uMVMatrix, false, mvStack.mvMatrix);
 			mvStack.mvRestore();
 
 
+
+			//simulated position
 			_lg.activeTexture(gl.TEXTURE0);
 			_lg.bindTexture(gl.TEXTURE_2D, this.gpuSim.currentFBO.rttTexture);
-			_lg.uniform1i(this.location.uSampler, 0);
+			_lg.uniform1i(this.program.uSampler, 0);
 
 
 			//make sure geometry of particle is ready
 			_lg.lazy.vertexAttribPointer(
 				gl.ARRAY_BUFFER, this.particleBuffer,
-				this.location.aVertexPosition, this.particleBuffer.itemSize, gl.FLOAT, false, 0, 0
+				this.program.aVertexPosition, this.particleBuffer.itemSize, gl.FLOAT, false, 0, 0
 			);
 
 
+
+			//update time.
+
 			//time :)
-			gl.uniform1f(this.location.uTimer, clock.sTime * 500);
+			gl.uniform1f(this.program.uTimer, clock.sTime * 500);
+
 
 
 			gl.drawArrays(gl.POINTS, 0, this.particleBuffer.numItems);
+
+			// _lg.bindTexture(gl.TEXTURE_2D, null);
 
 		};
 
@@ -263,18 +291,12 @@
 				this.draw();
 			}
 
+			//update tilt
 			this.simulate();
 
 		};
 
-		GpuParticle.prototype.simulate = function(){
-			this.tiltX %= 360;
-			this.tiltY %= 360;
 
-			this.tiltX -= 0.33 + ( Math.cos(clock.sTime) );
-			this.tiltY -= ( 1.0 - Math.sin(clock.sTime) ) / 2;
-
-		};
 
 		var ohParticle;
 
