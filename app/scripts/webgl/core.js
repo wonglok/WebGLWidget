@@ -989,12 +989,17 @@
 			// 	// debugger;
 			// }
 
-			gl.bindTexture(emTarget,objTexture);
+
+
+
 
 			if(
 				bindTexture.program !== useProgram.program ||
 				bindTexture[emTarget] !== objTexture
 			){
+
+
+				gl.bindTexture(emTarget,objTexture);
 
 				bindTexture[emTarget] = objTexture;
 				bindTexture.program = useProgram.program;

@@ -265,12 +265,9 @@
 
 			//time :)
 			gl.uniform1f(this.program.uTimer, clock.sTime * 500);
-
-
-
 			gl.drawArrays(gl.POINTS, 0, this.particleBuffer.numItems);
 
-			// _lg.bindTexture(gl.TEXTURE_2D, null);
+			_lg.bindTexture(gl.TEXTURE_2D, null);
 
 		};
 
