@@ -69,6 +69,13 @@
 				post: post.blur,
 				next: 3000
 			},
+
+			{
+				//sQuare
+				eng: ren.particle,
+				mode: 5,
+				next: 4000
+			},
 			{
 				//eEdge
 				eng: ren.particle,
@@ -76,13 +83,6 @@
 				mode: 2,
 				next: 4000
 			},
-			{
-				//sQuare
-				eng: ren.particle,
-				mode: 5,
-				next: 4000
-			},
-
 
 			{
 				//sWave
@@ -224,7 +224,7 @@
 
 			var ln = gEl('ln');
 			var lnTex = ln.innerHTML;
-			lnTex = lnTex.replace('support','<br>fully support');
+			lnTex = lnTex.replace('support','fully support');
 			lnTex = lnTex.replace('canvas','WebGL');
 			lnTex += '<br> Click here to learn more.';
 			ln.innerHTML = lnTex;
