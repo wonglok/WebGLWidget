@@ -12,14 +12,17 @@
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
         <!-- endbuild -->
-        <style>body{margin:0;padding:0}#msg{display:none;background:#ab0000;width:200px;height:200px;text-align:center;}#msg>*{margin: 15px 10px;}a{color:#FFF;}</style>
+        <style>body{margin:0;padding:0}#msg{font-family:arial;display:none;background:rgb(129,0,24);width:200px;height:200px;text-align:center;}#msg>*{margin: 32px 10px -20px 8px;}a{color:#FFF;}</style>
     </head>
     <body>
         <div id="msg">
             <img src="images/texture/webgl.png" alt="">
         </div>
         <canvas width="200" height="200" id="ww">
-            <a id="ln" href="http://get.webgl.org">Your browser does not support canvas.</a>
+            <p>
+                    <a id="ln" href="http://get.webgl.org">Your browser does not support canvas.</a>
+            </p>
+
         </canvas>
         <noscript>No Javascript :(</noscript>
         <!-- _DISABLE_build:js scripts/vendor.js -->
