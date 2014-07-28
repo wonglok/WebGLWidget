@@ -51,7 +51,7 @@
 		var ren = _di.get('renderables');
 		var support = _di.get('service.support');
 
-		var fallback = [
+		var fallbackScene = [
 			{
 				eng: ren.cube,
 				post: post.blur,
@@ -70,9 +70,36 @@
 				next: 3000
 			},
 			{
+				//eEdge
+				eng: ren.particle,
+				post: post.blur,
+				mode: 2,
+				next: 4000
+			},
+			{
 				//sQuare
 				eng: ren.particle,
 				mode: 5,
+				next: 4000
+			},
+
+
+			{
+				//sWave
+				eng: ren.particle,
+				mode: 1,
+				next: 4000
+			},
+			{
+				//ball wave
+				eng: ren.particle,
+				mode: 4,
+				next: 4000
+			},
+			{
+				//corner
+				eng: ren.particle,
+				mode: 3,
 				next: 4000
 			},
 			{
@@ -83,35 +110,10 @@
 				next: 4000
 			},
 
-			{
-				//sWave
-				eng: ren.particle,
-				mode: 1,
-				next: 4000
-			},
-			{
-				//corner
-				eng: ren.particle,
-				mode: 3,
-				next: 4000
-			},
-			{
-				//ball wave
-				eng: ren.particle,
-				mode: 4,
-				next: 4000
-			},
-			{
-				//eEdge
-				eng: ren.particle,
-				mode: 2,
-				next: 4000
-			},
-
 		];
 
 		if (!support.gpuSim){
-			scene = fallback;
+			scene = fallbackScene;
 		}
 
 		var stages = {
@@ -142,7 +144,6 @@
 			if (i >= scene.length){
 				i = 0;
 			}
-
 			setTimeout(changeNow, stages.now.next || 5000);
 		}
 		changeNow();
@@ -201,17 +202,43 @@
 
 	_di.val('run',function(){
 		var canvas = _di.get('canvas');
-		if (!window.HAS_WEBGL){
-			var newChild = document.createElement('div');
-			newChild.innerText = 'sorry, your browser does not support webgl.';
-			document.documentElement.appendChild(newChild);
+		var context = _di.get('context');
+
+		if (!context){
 			console.log(' no webgl ....');
-			document.documentElement.removeChild(canvas);
+
+			var d = document;
+			var docEl = d.documentElement;
+			var gEl = function (id){
+				return d.getElementById(id);
+			};
+			// var add = function(e,c){
+			// 	e.appendChild(c);
+			// };
+			// var nEl = function(t){
+			// 	d.createElement(t);
+			// };
+
+			var msg = gEl('msg');
+			msg.style.display = 'block';
+
+			var ln = gEl('ln');
+			var lnTex = ln.innerHTML;
+			lnTex = lnTex.replace('canvas','WebGL');
+			lnTex += '<br> Click here to learn more.';
+			ln.innerHTML = lnTex;
+
+			var ww = gEl('ww');
+
+			msg.innerHTML += '<br>' + ww.innerHTML;//widget
+
+
+			docEl.appendChild(msg);
+			canvas.style.display = 'none';
+
 			return;
 		}
 
-		_di.get('canvas');
-		_di.get('context');
 		_di.get('service.contextLost');
 		//_di.get('service.focus');
 

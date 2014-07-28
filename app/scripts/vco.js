@@ -4,9 +4,7 @@
 	//<3
 	//vanillla code organizr
 
-	window.HAS_WEBGL = (function(){
-		return !!window.WebGLRenderingContext;
-	}());
+
 
 	function nsR(){
 		var _di = {

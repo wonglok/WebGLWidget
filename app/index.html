@@ -11,17 +11,21 @@
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
         <!-- endbuild -->
-        <style>body{margin:0;padding:0}#wi{display:none;}</style>
+        <style>body{margin:0;padding:0}#msg{display:none;background:#ab0000;width:200px;height:200px;text-align:center;}#msg>*{margin: 15px 10px;}a{color:#FFF;}</style>
     </head>
     <body>
-        <img id="wi" src="images/texture/webgl.png" alt="">
-        <canvas  width="200" height="200" id="ww">Your browser does not support Canvas :(</canvas>
+        <div id="msg">
+            <img src="images/texture/webgl.png" alt="">
+        </div>
+        <canvas width="200" height="200" id="ww">
+            <a id="ln" href="http://get.webgl.org">Your browser does not support canvas.</a>
+        </canvas>
         <noscript>No Javascript :(</noscript>
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
         <!-- endbower -->
-
         <!-- endbuild -->
+
         <!--
         <link rel="stylesheet" href="styles/main.css">
         <script src="../bower_components/Stats/index.js"></script>

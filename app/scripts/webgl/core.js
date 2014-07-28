@@ -13,6 +13,70 @@
 	});
 
 	/**
+	 * Simulate the behaviour of an array with push pop.
+	 * @return {[type]} [description]
+	 */
+	_di.set('DoublyLinkedList',function(){
+		//https://github.com/mschwartz/SilkJS
+		var DoublyLinkedList = function() {
+			this.___next = this;
+			this.___prev = this;
+			this.length = 0;
+		};
+		DoublyLinkedList.prototype = {
+			constructor: DoublyLinkedList,
+			//addHead: function(o) {
+			unshift: function(o) {
+				this.length++;
+				this.append(o, this);
+			},
+
+			//addTail: function(o) {
+			push: function(o) {
+				this.length++;
+				this.append(o, this.___prev);
+			},
+
+			//remHead: function() {
+			shift: function() {
+				this.length--;
+				return this.___next === this ? false : this.remove(this.___next);
+			},
+
+			//remTail: function() {
+			pop: function() {
+				this.length--;
+				return this.___prev === this ? false : this.remove(this.___prev);
+			},
+			append: function(node, after) {
+				node.___next = after.___next;
+				node.___prev = after;
+				after.___next.___prev = node;
+				after.___next = node;
+			},
+			remove: function(node) {
+				node.___next.___prev = node.___prev;
+				node.___prev.___next = node.___next;
+				return node;
+			},
+			each: function(fn) {
+				for (
+					var node = this.___next;
+					node !== this;
+					node = node.___next
+				) {
+					fn(node);
+				}
+			},
+			empty: function() {
+				return this.___next === this;
+			}
+		};
+
+		return DoublyLinkedList;
+	});
+
+	/**
 	 * mvStack with linked list and mempool
 	 * @return {[type]} [description]
 	 */
@@ -195,20 +259,22 @@
 		var DoublyLinkedList = _di.get('DoublyLinkedList');
 		var stack = new DoublyLinkedList();
 
+		//stack = [];
+
 		var _f = {
-			checking: false, //
 			useCount: 0, //consistence checking
-			_free: stack,//[],
+			_free: stack,
 			_reset: function(o){ console.log('_resetter not ready!',o); },
 			_fac: function(){ console.log('_factory not ready!'); },
 			make: function(){
+				console.log('plmk:',_f._fac.toString());
 				return _f._fac();
 			},
 			makeFree: function(){
 				_f._free.push(_f.make());
 			},
 			getFree: function(){
-				return _f._free.pop();
+				return _f._free.shift();
 			},
 			prep: function(num){
 				for (var i = 0; i < num; i++) {
@@ -216,15 +282,22 @@
 				}
 			},
 			alloc: function(){
-				var result = _f.getFree();
-				result = result || _f.make();
+				var obj = _f.getFree();
+
+				if (!obj){
+					_f.makeFree();
+					obj = _f.getFree();
+				}
+
+				_f._reset(obj);
+
 				_f.useCount++;
-				return result;
+				return obj;
 			},
-			report: function(msg){
-				console.log(msg);
-				throw new Error(msg);
-			},
+			// report: function(msg){
+			// 	console.log(msg);
+			// 	throw new Error(msg);
+			// },
 			free: function(obj){
 				// if(_f.checking){
 				// 	if (_f._free.indexOf(obj) !== -1){
@@ -232,7 +305,9 @@
 				// 		return;
 				// 	}
 				// }
+
 				_f._reset(obj);
+
 				_f._free.push(obj);
 				_f.useCount--;
 			}
@@ -241,7 +316,7 @@
 	});
 
 
-	// //set free model
+	//set free model
 	// _di.val('util.pool',function (factory,reset){
 	// 	var _f = {
 
@@ -289,65 +364,7 @@
 	// });
 
 
-	_di.set('DoublyLinkedList',function(){
-		//https://github.com/mschwartz/SilkJS
-		var DoublyLinkedList = function() {
-			this.___next = this;
-			this.___prev = this;
-			this.length = 0;
-		};
-		DoublyLinkedList.prototype = {
-			constructor: DoublyLinkedList,
-			//addHead: function(o) {
-			unshift: function(o) {
-				this.length++;
-				this.append(o, this);
-			},
 
-			//addTail: function(o) {
-			push: function(o) {
-				this.length++;
-				this.append(o, this.___prev);
-			},
-
-			//remHead: function() {
-			shift: function() {
-				this.length--;
-				return this.___next === this ? false : this.remove(this.___next);
-			},
-
-			//remTail: function() {
-			pop: function() {
-				this.length--;
-				return this.___prev === this ? false : this.remove(this.___prev);
-			},
-			append: function(node, after) {
-				node.___next = after.___next;
-				node.___prev = after;
-				after.___next.___prev = node;
-				after.___next = node;
-			},
-			remove: function(node) {
-				node.___next.___prev = node.___prev;
-				node.___prev.___next = node.___next;
-				return node;
-			},
-			each: function(fn) {
-				for (
-					var node = this.___next;
-					node !== this;
-					node = node.___next
-				) {
-					fn(node);
-				}
-			},
-			empty: function() {
-				return this.___next === this;
-			}
-		};
-
-		return DoublyLinkedList;
-	});
 
 
 
@@ -616,8 +633,8 @@
 		);
 		var locationCache = getLocationCache(program);
 
-		var clock = _di.get('service.clock');
-		var gl = _di.get('context');
+		// var clock = _di.get('service.clock');
+		// var gl = _di.get('context');
 
 		locationCache.type = 'particle';
 // 		locationCache.simulate = function(){
@@ -669,12 +686,18 @@
 	_di.val('util.makeContext',function(){
 		var canvas = _di.get('canvas');
 		var context = canvas.getContext('webgl');
-		context.viewportWidth = canvas.width;
-		context.viewportHeight = canvas.height;
+
+		if (context){
+			context.viewportWidth = canvas.width;
+			context.viewportHeight = canvas.height;
+		}
+
 		return context;
 	});
 	_di.set('context',function(){
-		return _di.get('util.makeContext')();
+		var context;
+		context = _di.get('util.makeContext')();
+		return context;
 	});
 	_di.set('service.contextLost',function(){
 		var canvas = _di.get('canvas');
