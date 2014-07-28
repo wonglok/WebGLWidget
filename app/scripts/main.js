@@ -67,7 +67,7 @@
 			{
 				eng: ren.cube,
 				post: post.blur,
-				next: 3000
+				next: 4000
 			},
 
 			{
@@ -91,16 +91,16 @@
 				next: 4000
 			},
 			{
-				//ball wave
-				eng: ren.particle,
-				mode: 4,
-				next: 4000
-			},
-			{
 				//corner
 				eng: ren.particle,
 				mode: 3,
-				next: 4000
+				next: 5000
+			},
+			{
+				//ball wave
+				eng: ren.particle,
+				mode: 4,
+				next: 5000
 			},
 			{
 				//eEdge

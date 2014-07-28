@@ -163,14 +163,11 @@ module.exports = function (grunt) {
 		//grunt.loadNpmTasks('grunt-gh-pages');
 		'gh-pages': {
 			dist:{
-				//http://wonglok.github.io/FrameBudget.js/
 				options: {
 					user: {
-						name: 'wonglok',
+						name: 'Wong Lok',
 						email: 'wonglok@wonglok.com'
 					},
-					branch: 'master',
-					repo: 'git@github.com:wonglok/WebGLWidget.git',
 					base: 'dist'
 				},
 				src: [

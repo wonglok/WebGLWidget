@@ -784,7 +784,7 @@
 		var currentlyPressedKeys = {};
 		function handleKeyDown(event) {
 			currentlyPressedKeys[event.keyCode] = true;
-			console.log('mem down key:',event.keyCode);
+			// console.log('down key:',event.keyCode);
 		}
 		function handleKeyUp(event) {
 			currentlyPressedKeys[event.keyCode] = false;
