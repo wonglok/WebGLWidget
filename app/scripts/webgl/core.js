@@ -1198,7 +1198,7 @@
 			128,
 			64,
 			'images/texture/webgl.png',
-			'WebGL Widget for KhronosGroup'
+			'WebGL Widget for Khronos Group'
 		);
 
 		return {

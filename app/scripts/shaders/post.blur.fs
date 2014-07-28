@@ -3,7 +3,11 @@
  * @wonglok831
  * Gaussain Blur Fragment Shader - Post Process
  * Fixed Mobile Bug
- * Origian: http://xissburg.com/faster-gaussian-blur-in-glsl/
+ *
+ * Orignal: @xissburg
+ * http://xissburg.com/faster-gaussian-blur-in-glsl/
+ * https://github.com/xissburg/XBImageFilters/blob/master/XBImageFilters/Sample/Resources/Shaders/Blur.fsh
+ * MIT Licensed
  */
 
 

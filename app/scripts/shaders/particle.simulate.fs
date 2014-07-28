@@ -29,6 +29,8 @@ uniform int uMode;
 
 void main() {
 
+	vec2 vTC = vTextureCoord;
+
 	int mode;
 
 	if (uMode != 0){
@@ -41,12 +43,12 @@ void main() {
 	float opacity = 0.05;
 	vec4 nextPos = vec4(opacity);
 
-	vec4 lastPos = texture2D(uSampler, vTextureCoord);
+	vec4 lastPos = texture2D(uSampler, vTC);
 
 
 	float rVal = rand(vec2(
-		vTextureCoord.x,
-		vTextureCoord.y
+		vTC.x,
+		vTC.y
 	 ));
 
 	float sinTime = sin(uTimer / 500.0);
@@ -55,8 +57,8 @@ void main() {
 
 
 	vec4 fSpace = vec4(
-		sinTime * sin(uTimer * rVal + vTextureCoord.s),
-		cosTime * cos(uTimer * rVal + vTextureCoord.t),
+		sinTime * sin(uTimer * rVal + vTC.s),
+		cosTime * cos(uTimer * rVal + vTC.t),
 		cosTime * sinTime * tan(uTimer * rVal),
 		opacity
 	);
@@ -67,8 +69,8 @@ void main() {
 		nextPos = fSpace;
 	} else if (mode == 2) {
 		vec4 fEdge = vec4(
-			sinTime * sin(uTimer * vTextureCoord.s / 1000.0),
-			cosTime * cos(uTimer * vTextureCoord.t / 1000.0),
+			sinTime * sin(uTimer * vTC.s / 1000.0),
+			cosTime * cos(uTimer * vTC.t / 1000.0),
 			sinTime * sin(uTimer * 1.0 / rVal),
 			opacity
 		);
@@ -78,8 +80,8 @@ void main() {
 	} else if (mode == 3){
 
 		nextPos = vec4(
-			sinTime * sin(uTimer * rVal + vTextureCoord.s),
-			cosTime * cos(uTimer * rVal + vTextureCoord.t),
+			sinTime * sin(uTimer * rVal + vTC.s),
+			cosTime * cos(uTimer * rVal + vTC.t),
 			tanTime * sinTime * sin(uTimer * rVal),
 			opacity
 		);
@@ -87,8 +89,8 @@ void main() {
 	} else if (mode == 4){
 
 		vec4 sEdge = vec4(
-			sinTime * sin(uTimer * rVal + vTextureCoord.s),
-			cosTime * sin(uTimer * rVal + vTextureCoord.t),
+			sinTime * sin(uTimer * rVal + vTC.s),
+			cosTime * sin(uTimer * rVal + vTC.t),
 			cosTime * sin(uTimer * rVal),
 			opacity
 		);
@@ -97,16 +99,14 @@ void main() {
 	} else if (mode == 5){
 
 		vec4 eSignal = vec4(
-			tanTime * sin(uTimer * rVal * cosTime * vTextureCoord.s),
-			tanTime * sin(uTimer * rVal * sinTime * vTextureCoord.t),
+			tanTime * sin(uTimer * rVal * cosTime * vTC.s),
+			tanTime * sin(uTimer * rVal * sinTime * vTC.t),
 			tanTime * sin(uTimer * rVal * cosTime),
 			opacity
 		);
 
 		nextPos = eSignal;
 	}
-
-
 
 
 

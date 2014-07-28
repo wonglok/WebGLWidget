@@ -5,8 +5,8 @@
 		var api = {};
 
 		api.blur = _di.get('program.post.blur');
-		api.normal = _di.get('program.post.normal');
-		api.particleSim = _di.get('program.particle.simulate');
+		// api.normal = _di.get('program.post.normal');
+		// api.particleSim = _di.get('program.particle.simulate');
 
 		return api;
 	});
@@ -143,6 +143,7 @@
 
 			if (i >= scene.length){
 				i = 0;
+
 			}
 			setTimeout(changeNow, stages.now.next || 5000);
 		}

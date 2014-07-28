@@ -3,11 +3,12 @@
  * @wonglok831
  * Gaussain Blur Vertex Shader - Post Process
  * Fixed Mobile Bug
- * Origian: http://xissburg.com/faster-gaussian-blur-in-glsl/
+ *
+ * Orignal: @xissburg
+ * http://xissburg.com/faster-gaussian-blur-in-glsl/
+ * https://github.com/xissburg/XBImageFilters/blob/master/XBImageFilters/Sample/Resources/Shaders/Blur.fsh
+ * MIT Licensed
  */
-
-
-
 
 attribute vec2 aVertexPosition;
 attribute vec2 aTextureCoord;
@@ -84,8 +85,6 @@ void main() {
 	vBlurTexCoords[12] = vTextureCoord + vec2(0.0,  0.024);
 	vBlurTexCoords[13] = vTextureCoord + vec2(0.0,  0.028);
 	 */
-
-
 
 
 
