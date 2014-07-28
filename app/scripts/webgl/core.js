@@ -1158,8 +1158,6 @@
 
 			var wl = window.location;
 
-
-
 			//build string
 			var str = '';
 
@@ -1174,7 +1172,7 @@
 			str += ' padding-top: '+height+'px; ';
 			str += ' padding-left: '+width+'px; ';
 
-			str += ' background: url("'+wl.protocol+'//'+wl.host+wl.pathname+url+'") ; ';
+			str += ' background: url("'+wl.protocol+'//'+wl.host+wl.pathname+url+'"); ';
 			str += ' background-position: top center; ';
 			str += ' background-repeat:no-repeat; ';
 

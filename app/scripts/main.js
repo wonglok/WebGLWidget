@@ -224,6 +224,7 @@
 
 			var ln = gEl('ln');
 			var lnTex = ln.innerHTML;
+			lnTex = lnTex.replace('support','<br>fully support');
 			lnTex = lnTex.replace('canvas','WebGL');
 			lnTex += '<br> Click here to learn more.';
 			ln.innerHTML = lnTex;
