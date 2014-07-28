@@ -165,11 +165,12 @@ module.exports = function (grunt) {
 			dist:{
 				//http://wonglok.github.io/FrameBudget.js/
 				options: {
-					// user: {
-					// 	name: 'wonglok',
-					// 	email: 'wonglok@wonglok.com'
-					// },
-					// repo: 'https://github.com/wonglok/WebGLWidget.git',
+					user: {
+						name: 'wonglok',
+						email: 'wonglok@wonglok.com'
+					},
+					branch: 'master',
+					repo: 'git@github.com:wonglok/WebGLWidget.git',
 					base: 'dist'
 				},
 				src: [
