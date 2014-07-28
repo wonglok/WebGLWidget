@@ -267,7 +267,7 @@
 			_reset: function(o){ console.log('_resetter not ready!',o); },
 			_fac: function(){ console.log('_factory not ready!'); },
 			make: function(){
-				console.log('plmk:',_f._fac.toString());
+				//console.log('plmk:',_f._fac.toString());
 				return _f._fac();
 			},
 			makeFree: function(){
@@ -1148,6 +1148,67 @@
 		return api;
 	});
 
+	_di.set('service.console.logo',function(){
+
+		var consoleLogo = function (width,height,url,comment){
+
+			//config
+			var lineHeight = 14;
+
+
+			var wl = window.location;
+
+
+
+			//build string
+			var str = '';
+
+			//str += ' border: red solid 1px; ';
+
+			str += ' font-size: '+lineHeight+'; ';
+			str += ' margin-top: 20px; ';
+			str += ' margin-bottom: 20px; ';
+
+			str += ' line-height: '+lineHeight+'px; ';
+
+			str += ' padding-top: '+height+'px; ';
+			str += ' padding-left: '+width+'px; ';
+
+			str += ' background: url("'+wl.protocol+'//'+wl.host+wl.pathname+url+'") ; ';
+			str += ' background-position: top center; ';
+			str += ' background-repeat:no-repeat; ';
+
+			var lines = '\n';
+
+			var extraLines = (height/lineHeight)-1;
+			if (extraLines > 1){
+				for(var i = 0; i <= extraLines; i++){
+					lines += '\n';
+				}
+			}
+
+			console.log(lines+'%c', str);
+
+			if (comment){
+				console.log(comment);
+			}
+
+			return '';
+		};
+
+		consoleLogo(
+			128,
+			64,
+			'images/texture/webgl.png',
+			'WebGL Widget for KhronosGroup'
+		);
+
+		return {
+			say: consoleLogo
+		};
+
+
+	});
 
 	_di.set('service.lazyGL',function(){
 		return _di.get('util.lazyGL')();
@@ -1163,6 +1224,7 @@
 
 	window.domReady(function(){
 		_di.get('run')();
+		_di.get('service.console.logo');
 	});
 
 }(window._di));

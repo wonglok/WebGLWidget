@@ -1,4 +1,4 @@
-/* global describe, it, assert, beforeEach, , afterEach */
+/* global describe, it, assert, beforeEach, afterEach */
 
 (function (_di) {
     'use strict';
