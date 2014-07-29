@@ -14,7 +14,7 @@
 	* Frame Budget Task Manager
 	* No redundant GL calls.
 
-# Camear in Particle Scene:
+# Camera in Particle Scene:
 1. up,down,left,right to rotate
 2. w,a to zoom
 3. p to pause particle.
@@ -22,9 +22,8 @@
 # Credit:
 
 ## HTML5 Game Development Insights Book
-1. Memory Pool for mvMatrixStack
-	* Reduced from KBs to 10B at lowest memory allocation churn rate.
-2. Task Manager Idea
+1. Memory Pool for mvMatrixStack to reuse high curn object
+2. Task Manager to defer overbudget background task
 3. Eliminated Redundant Calls
 
 ## LearningWebGL.com
