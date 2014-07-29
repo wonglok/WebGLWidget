@@ -29,15 +29,15 @@
 - Organising a lot of moving object in LogoFan Scene
 - Textured Cube
 
-GL-Matrix Library
+## GL-Matrix Library
 - ViewModel Matrix Manipulation
 
-xissburg
+## xissburg
 - Guassian Blur (MIT Licensed)
 http://xissburg.com/faster-gaussian-blur-in-glsl/
 https://github.com/xissburg/XBImageFilters/
 
-Mr doob & zz85
+## Mr doob & zz85
 - Magic Dust Example
 - FBO Util
 - Particle Simulation GLSL Inspiration
