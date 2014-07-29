@@ -14,7 +14,7 @@
 	* Frame Budget Task Manager
 	* No redundant GL calls.
 
-# Camera in Particle Scene:
+# Control in Particle Scene:
 1. up,down,left,right to rotate
 2. w,a to zoom
 3. p to pause particle.
