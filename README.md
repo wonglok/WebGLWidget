@@ -1,6 +1,6 @@
 # WebGL Widget Description
 
-1. Logo Cube + Noise Texture + Gaussian Blur Post Processing
+1. Logo Cube + Noise Texture + Mobile perf friendly Gaussian Blur Post Processing
 2. GPU Simulated Particle Cloud Scene with 5 different animation mode
 	* Cyber Squares
 	* Edge Pulse
@@ -8,11 +8,13 @@
 	* Strom
 	* WormHole
 3. LogoFan Scene on iOS 8 Beta4 for fallback GPU particle Scene.
+4. Built version's download size with gzip on GitHub-Page is about 18.5KB
+5. Mobile Perf Oriented. Memory Pool, Frame Budget Task Manager, no redundant GL calls.
 
 # Camear in Particle Scene:
 1. up,down,left,right to rotate
 2. w,a to zoom
-3. p to pause particle. :)
+3. p to pause particle.
 
 # Credit:
 
@@ -30,11 +32,12 @@
 1. ViewModel Matrix Manipulation
 
 ## xissburg
-1. Guassian Blur (MIT Licensed)
+1. Guassian Blur
+	* I fixed mobile bug/limitation
 	* http://xissburg.com/faster-gaussian-blur-in-glsl/
 	* https://github.com/xissburg/XBImageFilters/
 
-## Mr doob & zz85
+## Mr.doob & zz85
 1. Magic Dust Example
 2. FBO Util
 3. Particle Simulation GLSL Inspiration

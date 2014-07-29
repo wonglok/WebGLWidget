@@ -21,33 +21,33 @@
 
 		api.type = 'GpuParticle';
 
-		var LogoTexture = function(){
-			this.logoTexture = null;
-		};
-		LogoTexture.prototype.processTexutre = function(texture){
-			_lg.useProgram(location.program);
-			_lg.bindTexture(gl.TEXTURE_2D, texture);
-			gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-			_lg.bindTexture(gl.TEXTURE_2D, null);
-			texture.$ready = true;
-		};
-		LogoTexture.prototype.initTexture = function(){
-			var self = this;
-			this.logoTexture = gl.createTexture();
+		// var LogoTexture = function(){
+		// 	this.logoTexture = null;
+		// };
+		// LogoTexture.prototype.processTexutre = function(texture){
+		// 	_lg.useProgram(location.program);
+		// 	_lg.bindTexture(gl.TEXTURE_2D, texture);
+		// 	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+		// 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+		// 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+		// 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		// 	_lg.bindTexture(gl.TEXTURE_2D, null);
+		// 	texture.$ready = true;
+		// };
+		// LogoTexture.prototype.initTexture = function(){
+		// 	var self = this;
+		// 	this.logoTexture = gl.createTexture();
 
-			this.logoTexture.image = new Image();
+		// 	this.logoTexture.image = new Image();
 
-			this.logoTexture.image.onload = function () {
-				setTimeout(function(){
-					self.processTexutre(self.logoTexture);
-				},0);
-			};
-		//	this.logoTexture.image.src = 'images/texture/logo.gif';
-			this.logoTexture.image.src = 'images/texture/webgl.png';
-		};
+		// 	this.logoTexture.image.onload = function () {
+		// 		setTimeout(function(){
+		// 			self.processTexutre(self.logoTexture);
+		// 		},0);
+		// 	};
+		// //	this.logoTexture.image.src = 'images/texture/logo.gif';
+		// 	this.logoTexture.image.src = 'images/texture/webgl.png';
+		// };
 
 		/**
 		 * Simulate the Particle
@@ -92,10 +92,6 @@
 		};
 
 		GpuSimulator.prototype.simulate = function(){
-			if (this.toggleMap[80] === true){
-				return;
-			}
-
 			var readFBO;
 			var writeFBO;
 
@@ -108,6 +104,10 @@
 			}
 			this.currentFBO = writeFBO;
 			this.pingPongIndex++;
+
+			if (this.toggleMap[80] === true){
+				return;
+			}
 
 			//save to framebuffer
 			writeFBO.bindFrameBuffer();
@@ -165,7 +165,7 @@
 			var height = gl.viewportHeight;
 
 
-			var i = 0, len = width*height / 3;
+			var i = 0, len = width*height / 4;
 			var array = [];
 
 			var x,y,z;
@@ -178,11 +178,20 @@
 
 				array.push(x);
 				array.push(y);
-				array.push(0);
+				//array.push(0);
 			}
 
 			//debugger;
 			this.particle = new Float32Array( array );
+		};
+
+		GpuParticle.prototype.initGraphics = function(){
+			this.particleBuffer = gl.createBuffer();
+			this.particleBuffer.itemSize = 2;
+			this.particleBuffer.numItems = this.particle.length / this.particleBuffer.itemSize;
+
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.particleBuffer);
+			gl.bufferData(gl.ARRAY_BUFFER, this.particle, gl.STATIC_DRAW);
 		};
 
 		GpuParticle.prototype.handleDownKeys = function handleKeys() {
@@ -219,14 +228,7 @@
 			}
 		};
 
-		GpuParticle.prototype.initGraphics = function(){
-			this.particleBuffer = gl.createBuffer();
-			this.particleBuffer.itemSize = 3;
-			this.particleBuffer.numItems = this.particle.length / 3;
 
-			gl.bindBuffer(gl.ARRAY_BUFFER, this.particleBuffer);
-			gl.bufferData(gl.ARRAY_BUFFER, this.particle, gl.STATIC_DRAW);
-		};
 
 		//reputable public data.
 

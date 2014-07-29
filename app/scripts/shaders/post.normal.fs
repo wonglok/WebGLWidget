@@ -4,7 +4,6 @@
  * Normal Quad Fragment Shader - Post Process
  */
 
-
 precision mediump float;
 
 uniform sampler2D uSampler;
