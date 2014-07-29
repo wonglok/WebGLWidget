@@ -73,13 +73,13 @@
 			},
 
 			{
-				//4 Squares Particle Cloud
+				//Cyber Squares,
 				eng: ren.particle,
 				mode: 5,
 				next: 4000
 			},
 			{
-				//sim sim Edge
+				//Edge Pulse,
 				eng: ren.particle,
 				post: post.blur,
 				mode: 2,
@@ -87,25 +87,25 @@
 			},
 
 			{
-				//sWave
+				//Wave,
 				eng: ren.particle,
 				mode: 1,
 				next: 4000
 			},
 			{
-				//corner
+				//Strom,
 				eng: ren.particle,
 				mode: 3,
 				next: 5000
 			},
 			{
-				//ball wave
+				//WormHole
 				eng: ren.particle,
 				mode: 4,
 				next: 5000
 			},
 			{
-				//eEdge
+				//Edge Pulse
 				eng: ren.particle,
 				post: post.blur,
 				mode: 2,
