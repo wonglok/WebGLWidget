@@ -152,46 +152,21 @@
 			this.zoom = -332.5;
 		}
 		GpuParticle.prototype.simulate = function(){
+			if (
+				this.keyDown[38] ||
+				this.keyDown[40] ||
+				this.keyDown[37] ||
+				this.keyDown[39]
+				// this.keyDown[87] ||
+				// this.keyDown[83]
+			){
+				return;
+			}
+
 			this.tiltX %= 360;
 			this.tiltY %= 360;
 			this.tiltX -= 0.33 + ( Math.cos(clock.sTime) );
 			this.tiltY -= ( 1.0 - Math.sin(clock.sTime) ) / 2;
-		};
-
-
-		GpuParticle.prototype.makeParticle = function(){
-
-			var width = gl.viewportWidth;
-			var height = gl.viewportHeight;
-
-
-			var i = 0, len = width*height / 4;
-			var array = [];
-
-			var x,y,z;
-
-			for(;i<len; i++ ){
-
-				x = ( i % width ) / width;
-				y = Math.floor( i / width ) / height;
-				z = 0;
-
-				array.push(x);
-				array.push(y);
-				//array.push(0);
-			}
-
-			//debugger;
-			this.particle = new Float32Array( array );
-		};
-
-		GpuParticle.prototype.initGraphics = function(){
-			this.particleBuffer = gl.createBuffer();
-			this.particleBuffer.itemSize = 2;
-			this.particleBuffer.numItems = this.particle.length / this.particleBuffer.itemSize;
-
-			gl.bindBuffer(gl.ARRAY_BUFFER, this.particleBuffer);
-			gl.bufferData(gl.ARRAY_BUFFER, this.particle, gl.STATIC_DRAW);
 		};
 
 		GpuParticle.prototype.handleDownKeys = function handleKeys() {
@@ -224,9 +199,46 @@
 			if (this.keyDown[83]) {
 				this.zoom -= 1;
 				this.zoom %= -500;
-				console.log(this.zoom);
+// 				console.log(this.zoom);
 			}
 		};
+
+		GpuParticle.prototype.makeParticle = function(){
+
+			var width = gl.viewportWidth;
+			var height = gl.viewportHeight;
+
+
+			var i = 0, len = width*height / 3;
+			var array = [];
+
+			var x,y,z;
+
+			for(;i<len; i++ ){
+
+				x = ( i % width ) / width;
+				y = Math.floor( i / width ) / height;
+				z = 0;
+
+				array.push(x);
+				array.push(y);
+				//array.push(0);
+			}
+
+			//debugger;
+			this.particle = new Float32Array( array );
+		};
+
+		GpuParticle.prototype.initGraphics = function(){
+			this.particleBuffer = gl.createBuffer();
+			this.particleBuffer.itemSize = 2;
+			this.particleBuffer.numItems = this.particle.length / this.particleBuffer.itemSize;
+
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.particleBuffer);
+			gl.bufferData(gl.ARRAY_BUFFER, this.particle, gl.STATIC_DRAW);
+		};
+
+
 
 
 

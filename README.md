@@ -1,6 +1,6 @@
 # WebGL Widget Description
 
-1. Logo Cube + Noise Texture + Mobile perf friendly Gaussian Blur Post Processing
+1. Logo Cube Scene + Noise Texture + Mobile perf friendly Gaussian Blur Post Processing
 2. GPU Simulated Particle Cloud Scene with 5 different animation mode
 	* Cyber Squares
 	* Edge Pulse
@@ -10,7 +10,7 @@
 3. LogoFan Scene on iOS 8 Beta4 for fallback GPU particle Scene.
 4. Built version's download size with gzip on GitHub-Page is about 18.5KB
 5. Mobile Perf Oriented.
-	* Memory Pool
+	* Memory Pool to reuse objects
 	* Frame Budget Task Manager
 	* No redundant GL calls.
 
@@ -19,10 +19,11 @@
 2. w,a to zoom
 3. p to pause particle.
 
+
 # Credit:
 
 ## HTML5 Game Development Insights Book
-1. Memory Pool for mvMatrixStack to reuse high curn object
+1. Memory Pool for mvMatrixStack to reuse high churn object
 2. Task Manager to defer overbudget background task
 3. Eliminated Redundant Calls
 
