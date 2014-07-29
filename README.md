@@ -29,7 +29,7 @@
 2. Textured Cube
 
 ## GL-Matrix Library
-1. ViewModel Matrix Manipulation
+1. ViewModel,Projection Matrix Manipulation
 
 ## xissburg
 1. Guassian Blur
