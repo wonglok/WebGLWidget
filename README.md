@@ -10,39 +10,35 @@
 3. LogoFan Scene on iOS 8 Beta4 for fallback GPU particle Scene.
 
 # Camear in Particle Scene:
-- 1. up,down,left,right to rotate
-- 2. w,a to zoom
-- 2. p to pause particle. :)
+1. up,down,left,right to rotate
+2. w,a to zoom
+3. p to pause particle. :)
 
 # Credit:
 
 ## HTML5 Game Development Insights
-- Memory Pool for mvMatrixStack
-
-	Reduced from KBs to 10B at lowest memory allocation churn rate.
-
-- Task Manager Idea
-
-- Eliminated Redundant Calls
+1. Memory Pool for mvMatrixStack
+	* Reduced from KBs to 10B at lowest memory allocation churn rate.
+2. Task Manager Idea
+3. Eliminated Redundant Calls
 
 ## LearningWebGL.com
-- Organising a lot of moving object in LogoFan Scene
-- Textured Cube
+1. Organising a lot of moving object in LogoFan Scene
+2. Textured Cube
 
 ## GL-Matrix Library
-- ViewModel Matrix Manipulation
+1. ViewModel Matrix Manipulation
 
 ## xissburg
-- Guassian Blur (MIT Licensed)
-
-http://xissburg.com/faster-gaussian-blur-in-glsl/
-https://github.com/xissburg/XBImageFilters/
+1. Guassian Blur (MIT Licensed)
+	* http://xissburg.com/faster-gaussian-blur-in-glsl/
+	* https://github.com/xissburg/XBImageFilters/
 
 ## Mr doob & zz85
-- Magic Dust Example
-- FBO Util
-- Particle Simulation GLSL Inspiration
-http://mrdoob.com/lab/javascript/webgl/particles/magicdust.html
+1. Magic Dust Example
+2. FBO Util
+3. Particle Simulation GLSL Inspiration
+	* http://mrdoob.com/lab/javascript/webgl/particles/magicdust.html
 
 
 
