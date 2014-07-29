@@ -9,7 +9,10 @@
 	* WormHole
 3. LogoFan Scene on iOS 8 Beta4 for fallback GPU particle Scene.
 4. Built version's download size with gzip on GitHub-Page is about 18.5KB
-5. Mobile Perf Oriented. Memory Pool, Frame Budget Task Manager, no redundant GL calls.
+5. Mobile Perf Oriented.
+	* Memory Pool
+	* Frame Budget Task Manager
+	* No redundant GL calls.
 
 # Camear in Particle Scene:
 1. up,down,left,right to rotate
@@ -18,7 +21,7 @@
 
 # Credit:
 
-## HTML5 Game Development Insights
+## HTML5 Game Development Insights Book
 1. Memory Pool for mvMatrixStack
 	* Reduced from KBs to 10B at lowest memory allocation churn rate.
 2. Task Manager Idea
