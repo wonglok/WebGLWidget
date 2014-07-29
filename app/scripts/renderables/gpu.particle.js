@@ -21,6 +21,33 @@
 
 		api.type = 'GpuParticle';
 
+		var LogoTexture = function(){
+			this.logoTexture = null;
+		};
+		LogoTexture.prototype.processTexutre = function(texture){
+			_lg.useProgram(location.program);
+			_lg.bindTexture(gl.TEXTURE_2D, texture);
+			gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+			_lg.bindTexture(gl.TEXTURE_2D, null);
+			texture.$ready = true;
+		};
+		LogoTexture.prototype.initTexture = function(){
+			var self = this;
+			this.logoTexture = gl.createTexture();
+
+			this.logoTexture.image = new Image();
+
+			this.logoTexture.image.onload = function () {
+				setTimeout(function(){
+					self.processTexutre(self.logoTexture);
+				},0);
+			};
+		//	this.logoTexture.image.src = 'images/texture/logo.gif';
+			this.logoTexture.image.src = 'images/texture/webgl.png';
+		};
 
 		/**
 		 * Simulate the Particle
@@ -31,6 +58,7 @@
 			this.rttFBO1 = _di.get('util.makeFloatFBO')();
 			this.rttFBO2 = _di.get('util.makeFloatFBO')();
 
+			this.toggleMap = _di.get('service.toggle');
 
 			this.currentFBO = null;
 			this.pingPongIndex = 0;
@@ -40,7 +68,6 @@
 			this.prebind = {
 				updateMode: this.updateMode.bind(this),
 			};
-
 
 			// setInterval(this.clear.bind(this),1000);
 
@@ -59,14 +86,15 @@
 		// 	this.rttFBO2.unbindFrameBuffer();
 		// };
 
-
 		GpuSimulator.prototype.updateMode = function(mode){
 			_lg.useProgram(this.program.program);
 			_lg.uniform1i(this.program.uMode, mode || 1);
 		};
 
 		GpuSimulator.prototype.simulate = function(){
-
+			if (this.toggleMap[80] === true){
+				return;
+			}
 
 			var readFBO;
 			var writeFBO;
@@ -83,7 +111,6 @@
 
 			//save to framebuffer
 			writeFBO.bindFrameBuffer();
-
 
 			//draw paricle position to quad
 			writeFBO.bindPostProcess(this.program,readFBO.rttTexture);
@@ -273,20 +300,22 @@
 		 * @return {[type]}      [description]
 		 */
 		GpuParticle.prototype.render = function(post){
-
+			//update camera
 			this.handleDownKeys();
 
+			//simulate particle position
 			this.gpuSim.simulate();
 
+			//do post processing
 			if (post){
 				postProcess.renderPass(this.prebind.draw, post);
 			}else{
+				//dont do post process
 				this.draw();
 			}
 
-			//update tilt
+			//update camera
 			this.simulate();
-
 		};
 
 

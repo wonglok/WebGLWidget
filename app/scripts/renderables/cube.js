@@ -26,37 +26,37 @@
 
 		var cVBO = gl.createBuffer();
 		cVBO.array = [
-			// Front face
+			//front
 			-2.0, -1.0,  1.0,
 			2.0, -1.0,  1.0,
 			2.0,  1.0,  1.0,
 			-2.0,  1.0,  1.0,
 
-			// Back face
+			//back
 			-2.0, -1.0, -1.0,
 			-2.0,  1.0, -1.0,
 			2.0,  1.0, -1.0,
 			2.0, -1.0, -1.0,
 
-			// Top face
+			//top
 			-2.0,  1.0, -1.0,
 			-2.0,  1.0,  1.0,
 			2.0,  1.0,  1.0,
 			2.0,  1.0, -1.0,
 
-			// Bottom face
+			//bottom
 			-2.0, -1.0, -1.0,
 			2.0, -1.0, -1.0,
 			2.0, -1.0,  1.0,
 			-2.0, -1.0,  1.0,
 
-			// Right face
+			//right
 			2.0, -1.0, -1.0,
 			2.0,  1.0, -1.0,
 			2.0,  1.0,  1.0,
 			2.0, -1.0,  1.0,
 
-			// Left face
+			//left
 			-2.0, -1.0, -1.0,
 			-2.0, -1.0,  1.0,
 			-2.0,  1.0,  1.0,
@@ -69,37 +69,37 @@
 
 		var cVTBO = gl.createBuffer();
 		cVTBO.array = [
-			// Front face
+			//front
 			0.0, 0.0, //x,y
 			1.0, 0.0,
 			1.0, 1.0,
 			0.0, 1.0,
 
-			// Back face
+			//back
 			0.0, 1.0,
 			0.0, 0.0,
 			1.0, 0.0,
 			1.0, 1.0,
 
-			// Top face
+			//top
 			0.0, 1.0,
 			0.0, 0.0,
 			1.0, 0.0,
 			1.0, 1.0,
 
-			// Bottom face
+			//bottom
 			0.0, 0.0,
 			1.0, 0.0,
 			1.0, 1.0,
 			0.0, 1.0,
 
-			// Right face
+			//right
 			1.0, 0.0,
 			1.0, 1.0,
 			0.0, 1.0,
 			0.0, 0.0,
 
-			// Left face
+			//left
 			0.0, 0.0,
 			1.0, 0.0,
 			1.0, 1.0,
@@ -113,13 +113,13 @@
 		//
 		var cIBO = gl.createBuffer();
 		cIBO.array = [
-			0,  1,  2,      0,  2,  3, // Front face, 2 triangles, 6vertex
-			4,  5,  6,      4,  6,  7, // Back face
-			8,  9, 10,      8, 10, 11, // Top face
+			0,  1,  2,      0,  2,  3, // Front, 2 triangles, 6vertex
+			4,  5,  6,      4,  6,  7, // Back
+			8,  9, 10,      8, 10, 11, // Top
 
-			16, 17, 18,    16, 18, 19, // Right face
-			12, 13, 14,    12, 14, 15, // Bottom face
-			20, 21, 22,    20, 22, 23  // Left face
+			16, 17, 18,    16, 18, 19, // Right
+			12, 13, 14,    12, 14, 15, // Bottom
+			20, 21, 22,    20, 22, 23  // Left
 		];
 		cIBO.itemSize = 1;
 		cIBO.numItems = 36;
@@ -149,7 +149,6 @@
 					newTexture.$ready = true;
 				});
 				//frbt.digest();
-
 			};
 			newTexture.$image.src = src;
 

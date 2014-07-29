@@ -478,6 +478,8 @@
 	});
 
 
+
+
 	/**
 	 * check support of webgl
 	 * @return {[type]} [description]
@@ -490,12 +492,12 @@
 			gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS) >= 1
 		);
 
-		check.floatTexture = (
-			!!gl.getExtension( 'OES_texture_float' )
+		check.oesFloat = (
+			!!gl.getExtension('OES_texture_float')
 		);
 
 		//if any of the stuff is not supported, then dont use this. :)
-		if (!check.vertexSampler || !check.floatTexture ) {
+		if (!check.vertexSampler || !check.oesFloat ) {
 			check.gpuSim = false;
 		}else{
 			check.gpuSim = true;
@@ -506,7 +508,7 @@
 		){
 			var usrA= navigator.userAgent;
 			var info = usrA.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
-			if (parseFloat(info[2],10) <= 9537){
+			if (parseFloat(info[2],10) <= 9537){//less than ios8 beta4.
 				check.gpuSim = false;
 			}
 		}
@@ -795,6 +797,26 @@
 		return currentlyPressedKeys;
 	});
 
+	/**
+	 * keydown map, true when keydown, keyup = false;
+	 * @return {[type]} [description]
+	 */
+	_di.set('service.toggle',function(){
+		var toogleKey = {};
+		function handleKeyUp(event) {
+			if (toogleKey[event.keyCode]){
+				toogleKey[event.keyCode] = false;
+			}else{
+				toogleKey[event.keyCode] = true;
+			}
+			//console.log(toogleKey);
+		}
+		window.addEventListener('keyup',handleKeyUp,false);
+
+		return toogleKey;
+	});
+
+
 
 
 	/**
@@ -1024,9 +1046,6 @@
 			// if (objTexture && objTexture.___type){
 			// 	// debugger;
 			// }
-
-
-
 
 
 			if(

@@ -10,7 +10,6 @@ precision highp float;
 uniform sampler2D uSampler;
 varying vec2 vTextureCoord;
 
-
 uniform float uTimer;
 
 float rand(vec2 co){

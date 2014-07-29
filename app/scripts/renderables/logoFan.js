@@ -11,6 +11,7 @@
 		var degToRad = _di.get('util.degToRad');
 		var keyDownMap = _di.get('service.keydown');
 
+		var ftbt = _di.get('service.frbt');
 
 		function Logo(rSpeed, logoParent) {
 			this.rDegree = 0;
@@ -121,9 +122,12 @@
 			this.logoTexture.image = new Image();
 
 			this.logoTexture.image.onload = function () {
-				setTimeout(function(){
-					self.processTexutre(self.logoTexture);
-				},0);
+
+				ftbt.addTask(self.processTexutre,self,self.logoTexture);
+
+				// setTimeout(function(){
+				// 	self.processTexutre(self.logoTexture);
+				// },0);
 			};
 		//	this.logoTexture.image.src = 'images/texture/logo.gif';
 			this.logoTexture.image.src = 'images/texture/webgl.png';

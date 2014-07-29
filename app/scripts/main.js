@@ -64,20 +64,22 @@
 			},
 		];
 		var scene = [
+
 			{
+				//
 				eng: ren.cube,
 				post: post.blur,
 				next: 4000
 			},
 
 			{
-				//sQuare
+				//4 Squares Particle Cloud
 				eng: ren.particle,
 				mode: 5,
 				next: 4000
 			},
 			{
-				//eEdge
+				//sim sim Edge
 				eng: ren.particle,
 				post: post.blur,
 				mode: 2,
@@ -156,13 +158,7 @@
 
 
 
-	_di.val('util.makeFloatFBO',function(){
-		var words = _di.get('const');
-		var rttFBO = _di.get('util.makeFBO')({
-			textureType: words.FloatType
-		});
-		return rttFBO;
-	});
+
 
 
 
@@ -180,11 +176,13 @@
 			if (
 				now.eng && now.eng.type === 'GpuParticle'
 			){
+				//delegate the renderer to do post processing
 				now.eng.render(now.post);
 			} else if (
 				now.post && now.post.type === 'blur' ||
 				now.post && now.post.type === 'normal'
 			){
+				//do post process
 				postProcess.renderPass(now.eng.render, now.post);
 			}else{
 				now.eng.render();

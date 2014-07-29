@@ -7,6 +7,14 @@
 		return constant;
 	});
 
+	_di.val('util.makeFloatFBO',function(){
+		var words = _di.get('const');
+		var rttFBO = _di.get('util.makeFBO')({
+			textureType: words.FloatType
+		});
+		return rttFBO;
+	});
+
 	_di.val('util.makeFBO',function(options){
 		options = options || {};
 
@@ -16,7 +24,7 @@
 		var gl = _di.get('context');
 		var width = gl.viewportWidth;
 		var height = gl.viewportHeight;
-		var word = _di.get('const');
+		//var word = _di.get('const');
 
 
 		/**
@@ -34,16 +42,23 @@
 		//xy wrapping, clam to edge
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
 
-		if (options.type === word.FloatType){
-			//sample data
-			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, width, height, 0, gl.RGB, gl.UNSIGNED_BYTE, null);
-		}else{
-			//sample data
-			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-		}
+		// if (options.textureType === word.FloatType){
+		// 	if (gl.getExtension('OES_texture_float')){
+		// 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, width, height, 0, gl.RGB, gl.FLOAT, null);
+		// 	}else{
+		// 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+		// 	}
+		// 	//sample data
+		// 	//alert('~');
+		// }else{
+		// 	//sample data
+		// 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+		// }
+
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 
 
 		api.rttTexture = rttTexture;
@@ -179,9 +194,9 @@
 
 		};
 
-		api.clear = function(){
+		// api.clear = function(){
 
-		};
+		// };
 
 
 

@@ -6,8 +6,6 @@
 
 precision mediump float;
 
-uniform sampler2D uSampler;
-
 uniform float uTimer;
 
 float opacity = 0.25;
