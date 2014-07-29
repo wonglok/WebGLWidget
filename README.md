@@ -35,7 +35,7 @@
 1. Guassian Blur
 	* I fixed mobile bug/limitation
 	* http://xissburg.com/faster-gaussian-blur-in-glsl/
-	* https://github.com/xissburg/XBImageFilters/
+	* https://github.com/xissburg/XBImageFilters/ (MIT Licensed)
 
 ## Mr.doob & zz85
 1. Magic Dust Example
