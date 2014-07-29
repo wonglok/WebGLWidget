@@ -34,6 +34,7 @@
 
 ## xissburg
 - Guassian Blur (MIT Licensed)
+
 http://xissburg.com/faster-gaussian-blur-in-glsl/
 https://github.com/xissburg/XBImageFilters/
 
