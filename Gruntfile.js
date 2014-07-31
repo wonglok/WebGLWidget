@@ -161,21 +161,21 @@ module.exports = function (grunt) {
 		},
 
 		//grunt.loadNpmTasks('grunt-gh-pages');
-		'gh-pages': {
-			dist:{
-				options: {
-					user: {
-						name: 'Wong Lok',
-						email: 'wonglok@wonglok.com'
-					},
-					base: 'dist'
-				},
-				src: [
-					'**',
-					'!sftp-config.json'
-				]
-			}
-		},
+		// 'gh-pages': {
+		// 	dist:{
+		// 		options: {
+		// 			user: {
+		// 				name: 'Wong Lok',
+		// 				email: 'wonglok@wonglok.com'
+		// 			},
+		// 			base: 'dist'
+		// 		},
+		// 		src: [
+		// 			'**',
+		// 			'!sftp-config.json'
+		// 		]
+		// 	}
+		// },
 
 
 		// The actual grunt server settings

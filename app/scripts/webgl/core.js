@@ -477,8 +477,26 @@
 		return cache;
 	});
 
+	/**
+	 * service.devlog
+	 * @return {[type]} [description]
+	 */
+	_di.set('service.devLog',function(){
+		var documentFrag = document.createDocumentFragment();
+		function log(text){
+			var sp2 = document.createElement('span');
+			sp2.innerHTML = text;
+			documentFrag.appendChild(sp2);
+		}
+		function show(){
+			document.documentElement.appendChild(documentFrag);
+		}
 
-
+		return {
+			log:log,
+			show:show
+		};
+	});
 
 	/**
 	 * check support of webgl
@@ -496,22 +514,65 @@
 			!!gl.getExtension('OES_texture_float')
 		);
 
+		check.checkFBOColor = function(){
+			var width = 10, height = 10;
+			var tex = gl.createTexture();
+			gl.bindTexture(gl.TEXTURE_2D, tex);
+
+			//texture float
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, null);
+
+			//xy wrapping, clam to edge
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+			gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+
+			//dont use mig mag
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+
+			//color attachment
+			var colcorFB = gl.createFramebuffer();
+			gl.bindFramebuffer(gl.FRAMEBUFFER, colcorFB);
+
+			//depth attachment
+			var depthRB = gl.createRenderbuffer();
+			gl.bindRenderbuffer(gl.RENDERBUFFER, depthRB);
+			gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
+
+			gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+			gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthRB);
+
+			var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+			if (status !== gl.FRAMEBUFFER_COMPLETE) {
+				return false;
+			}else{
+				return true;
+			}
+
+		};
+
+		check.fboColorAttachment = (function(){
+			return check.checkFBOColor();
+		}());
+
 		//if any of the stuff is not supported, then dont use this. :)
-		if (!check.vertexSampler || !check.oesFloat ) {
+		if (!check.vertexSampler || !check.oesFloat || !check.fboColorAttachment) {
 			check.gpuSim = false;
 		}else{
 			check.gpuSim = true;
 		}
 
-		if (
-			navigator.userAgent.match(/(iPod|iPhone|iPad)/)
-		){
-			var usrA= navigator.userAgent;
-			var info = usrA.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
-			if (parseFloat(info[2],10) <= 9537){//less than ios8 beta4.
-				check.gpuSim = false;
-			}
-		}
+		// if (
+		// 	navigator.userAgent.match(/(iPod|iPhone|iPad)/)
+		// ){
+		// 	var usrA= navigator.userAgent;
+		// 	var info = usrA.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+		// 	if (parseFloat(info[2],10) <= 9537){//less than ios8 beta4.
+		// 		check.gpuSim = false;
+		// 	}
+		// }
 
 		// console.log(check
 		// 	//[JSON.stringify(,null,'\t')]

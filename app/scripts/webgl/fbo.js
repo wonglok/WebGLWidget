@@ -15,6 +15,8 @@
 		return rttFBO;
 	});
 
+
+
 	_di.val('util.makeFBO',function(options){
 		options = options || {};
 
@@ -24,7 +26,7 @@
 		var gl = _di.get('context');
 		var width = gl.viewportWidth;
 		var height = gl.viewportHeight;
-		//var word = _di.get('const');
+		// var word = _di.get('const');
 
 
 		/**
@@ -32,7 +34,6 @@
 		 * @type {[type]}
 		 */
 		var rttTexture = gl.createTexture();
-		rttTexture.___type = 'fbo';
 		_lg.bindTexture(gl.TEXTURE_2D, rttTexture);
 
 		//dont use mig mag
@@ -44,22 +45,7 @@
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
-
-		// if (options.textureType === word.FloatType){
-		// 	if (gl.getExtension('OES_texture_float')){
-		// 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, width, height, 0, gl.RGB, gl.FLOAT, null);
-		// 	}else{
-		// 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-		// 	}
-		// 	//sample data
-		// 	//alert('~');
-		// }else{
-		// 	//sample data
-		// 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-		// }
-
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-
 
 		api.rttTexture = rttTexture;
 
@@ -75,8 +61,11 @@
 		 */
 		var rttFrameBuffer = gl.createFramebuffer();
 		gl.bindFramebuffer(gl.FRAMEBUFFER, rttFrameBuffer);
+
 		gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, rttTexture, 0);
 		gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, rttRenderBuffer);
+
+
 
 		/**
 		 * Clean up
