@@ -159,7 +159,7 @@
 		//framebudget task manager
 		function FrbT(){
 			var that = this;
-			this.frameBudget = 6;//6ms can do a lot ...
+			this.frameBudget = 3;//6ms can do a lot ...
 
 			this.state = {
 				finished: false,
@@ -366,8 +366,6 @@
 
 
 
-
-
 	_di.val('util.getShader',function(gl, str,type){
 		var shader;
 		if (type === 'vs'){
@@ -502,9 +500,9 @@
 	 * check support of webgl
 	 * @return {[type]} [description]
 	 */
-	_di.val('fac.check',function(){
+	_di.val('fac.check',function($gl){
 		var check = {};
-		var gl = _di.get('context');
+		var gl = $gl || _di.get('context');
 
 		check.vertexSampler = (
 			gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS) >= 1
@@ -520,6 +518,11 @@
 			gl.bindTexture(gl.TEXTURE_2D, tex);
 
 			//texture float
+
+			//cannot detect failure
+			//gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+
+			//can detect failure
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, null);
 
 			//xy wrapping, clam to edge
