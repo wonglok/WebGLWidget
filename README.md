@@ -1,5 +1,6 @@
-# Improvments Made Before Deadline.
+# Improvments made before deadline.
 1. Better detection code.
+(but not submitted /.\~)
 
 # WebGL Widget Description
 
