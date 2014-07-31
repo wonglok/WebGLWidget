@@ -1,3 +1,6 @@
+# Improvments Made Before Deadline.
+1. Better detection code.
+
 # WebGL Widget Description
 
 1. Logo Cube Scene + Noise Texture + Mobile perf friendly Gaussian Blur Post Processing
