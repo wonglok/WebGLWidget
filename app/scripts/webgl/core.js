@@ -364,8 +364,6 @@
 	// });
 
 
-
-
 	_di.val('util.getShader',function(gl, str,type){
 		var shader;
 		if (type === 'vs'){
@@ -443,8 +441,6 @@
 			locationCache[uniforms[ui]] = location;
 			locationCache[uniforms[ui]].___uniformName = uniforms[ui];
 		}
-
-
 		return locationCache;
 	});
 
@@ -456,6 +452,7 @@
 			program: program
 		};
 		count = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
+
 		for (i = 0; i < count; i++) {
 			attrib = gl.getActiveAttrib(program, i);
 			shaderLocation = gl.getAttribLocation(program, attrib.name);
@@ -513,18 +510,20 @@
 			!!gl.getExtension('OES_texture_float')
 		);
 
-		check.checkFBOAttachment = function(){
+		check.makeTestTextureFBO = function(textureType){
 			var width = 10, height = 10;
-			var tex = gl.createTexture();
-			gl.bindTexture(gl.TEXTURE_2D, tex);
+			var colorTexture = gl.createTexture();
+			gl.bindTexture(gl.TEXTURE_2D, colorTexture);
 
 			//texture float
 
-			//cannot detect failure
+			//cannot detect failure gl.UNSIGNED_BYTE
 			// gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 
-			//can detect failure
-			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, null);
+			//can detect failure gl.FLOAT
+			//gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, null);
+
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, textureType, null);
 
 			//xy wrapping, clam to edge
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -535,34 +534,63 @@
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
+			var fbo = gl.createFramebuffer();
+			gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
 
-			//color attachment
-			var colcorFB = gl.createFramebuffer();
-			gl.bindFramebuffer(gl.FRAMEBUFFER, colcorFB);
-
-			//depth attachment
 			var depthRB = gl.createRenderbuffer();
 			gl.bindRenderbuffer(gl.RENDERBUFFER, depthRB);
 			gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
 
-			gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+			//color attachment
+			gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorTexture, 0);
+			//depth attachment
 			gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthRB);
-
+			//check completeness
 			var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-			if (status !== gl.FRAMEBUFFER_COMPLETE) {
-				return false;
-			}else{
-				return true;
-			}
+
+			return {
+				attachment: (status === gl.FRAMEBUFFER_COMPLETE),
+				fbo: fbo
+			};
+		};
+		check.cleanUpBinding = function(){
+			gl.bindTexture(gl.TEXTURE_2D, null);
+			gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		};
 
-		check.fboAttachment = (function(){
-			return check.checkFBOAttachment();
-		}());
+		check.checkFloatTextureAttachment = function(){
+			var floatTexture = check.makeTestTextureFBO(gl.FLOAT);
+			if(!floatTexture.attachment){
+				check.floatTextureAttachment = false;
+			}else{
+				check.floatTextureAttachment = true;
+			}
+			check.cleanUpBinding();
+		};
+		check.checkFloatTextureAttachment();
+
+
+		check.checkBtyesTextureAttachment = function(){
+			var floatTexture = check.makeTestTextureFBO(gl.UNSIGNED_BYTE);
+			if(!floatTexture.attachment){
+				check.bytesTextureAttachment = false;
+			}else{
+				check.bytesTextureAttachment = true;
+			}
+			check.cleanUpBinding();
+		};
+
+		check.checkBtyesTextureAttachment();
+
 
 
 		//if any of the stuff is not supported, then dont use this. :)
-		if (!check.vertexSampler || !check.oesFloat || !check.fboAttachment) {
+		//use either gl point size or
+		if (!check.vertexSampler || !check.oesFloat || !(
+			check.floatTextureAttachment ||
+			check.checkBtyesTextureAttachment
+		)) {
 			check.gpuSim = false;
 		}else{
 			check.gpuSim = true;
@@ -636,6 +664,31 @@
 		return locationCache;
 	});
 
+
+	/**
+	 * post processing blurrrrr
+	 * @return {[type]} [description]
+	 */
+	_di.set('program.post.blur',function(){
+		var getLocationCache = _di.get('util.getLocationCache');
+		var program = _di.get('util.makeProgramFromSrc')(
+			_di.get('scripts/shaders/post.blur.vs'),
+			_di.get('scripts/shaders/post.blur.fs')
+		);
+		var locationCache = getLocationCache(program);
+
+		var gl = _di.get('context');
+		var clock = _di.get('service.clock');
+
+		locationCache.type = 'blur';
+		locationCache.simulate = function(){
+			//vibe
+			gl.uniform1f(locationCache.uVibrate,Math.sin(clock.eTime+clock.sTime*10));
+		};
+
+		return locationCache;
+	});
+
 	/**
 	 * normal post processing
 	 * @return {[type]} [description]
@@ -680,6 +733,8 @@
 		return locationCache;
 	});
 
+
+
 	/**
 	 * particle random simulator
 	 * @return {[type]} [description]
@@ -704,30 +759,6 @@
 		return locationCache;
 	});
 
-
-	/**
-	 * post processing blurrrrr
-	 * @return {[type]} [description]
-	 */
-	_di.set('program.post.blur',function(){
-		var getLocationCache = _di.get('util.getLocationCache');
-		var program = _di.get('util.makeProgramFromSrc')(
-			_di.get('scripts/shaders/post.blur.vs'),
-			_di.get('scripts/shaders/post.blur.fs')
-		);
-		var locationCache = getLocationCache(program);
-
-		var gl = _di.get('context');
-		var clock = _di.get('service.clock');
-
-		locationCache.type = 'blur';
-		locationCache.simulate = function(){
-			//vibe
-			gl.uniform1f(locationCache.uVibrate,Math.sin(clock.eTime+clock.sTime*10));
-		};
-
-		return locationCache;
-	});
 
 
 	/**
@@ -775,7 +806,6 @@
 		}, false);
 
 	});
-
 
 
 	/**
@@ -875,8 +905,6 @@
 	});
 
 
-
-
 	/**
 	 * Clock maker
 	 * @return {[type]} [description]
@@ -916,6 +944,8 @@
 
 		return _c;
 	});
+
+
 	/**
 	 * clock service
 	 * @return {[type]} [description]

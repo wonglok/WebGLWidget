@@ -28,7 +28,6 @@
 		var height = gl.viewportHeight;
 		// var word = _di.get('const');
 
-
 		/**
 		 * make texture to store color
 		 * @type {[type]}
@@ -92,7 +91,6 @@
 		api.unbindFrameBuffer = function(){
 			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		};
-
 
 
 		/**

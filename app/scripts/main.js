@@ -15,7 +15,7 @@
 
 		api.logo = _di.get('renderable.logoFan').init();
 		api.cube = _di.get('renderable.cube').init();
-		api.particle = _di.get('renderable.gpu.particle.show').init();
+		api.particle = _di.get('renderable.gpu.particle').init();
 
 		return api;
 	});
@@ -71,7 +71,6 @@
 				post: post.blur,
 				next: 4000
 			},
-
 			{
 				//Cyber Squares,
 				eng: ren.particle,
@@ -85,7 +84,6 @@
 				mode: 2,
 				next: 4000
 			},
-
 			{
 				//Wave,
 				eng: ren.particle,
@@ -120,7 +118,6 @@
 
 		var stages = {
 			now: null,
-
 			currentIndex: 0,
 			clear: true
 		};
@@ -155,11 +152,6 @@
 
 		return stages;
 	});
-
-
-
-
-
 
 
 	_di.set('render',function(){

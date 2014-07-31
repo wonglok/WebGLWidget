@@ -1,5 +1,6 @@
 # Improvments made before deadline.
 1. Better detection code.
+2. iOS Support for GPU Particle Simulation.
 
 # WebGL Widget Description
 

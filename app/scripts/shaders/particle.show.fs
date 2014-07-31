@@ -8,7 +8,7 @@ precision mediump float;
 
 uniform float uTimer;
 
-float opacity = 0.25;
+float opacity = 0.2;
 
 float rand(vec2 co){
     return fract(sin(

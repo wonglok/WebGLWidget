@@ -1,7 +1,7 @@
 (function(_di){
 	'use strict';
 
-	_di.set('renderable.gpu.particle.show',function(){
+	_di.set('renderable.gpu.particle',function(){
 		var gl = _di.get('context');
 		var _lg = _di.get('service.lazyGL');
 		var clock = _di.get('service.clock');
@@ -70,7 +70,6 @@
 			};
 
 			// setInterval(this.clear.bind(this),1000);
-
 		}
 
 		// GpuSimulator.prototype.clear = function(){
@@ -204,10 +203,8 @@
 		};
 
 		GpuParticle.prototype.makeParticle = function(){
-
 			var width = gl.viewportWidth;
 			var height = gl.viewportHeight;
-
 
 			var i = 0, len = width*height / 3;
 			var array = [];
