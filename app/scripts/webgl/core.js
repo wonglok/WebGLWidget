@@ -479,22 +479,22 @@
 	 * service.devlog
 	 * @return {[type]} [description]
 	 */
-	_di.set('service.devLog',function(){
-		var documentFrag = document.createDocumentFragment();
-		function log(text){
-			var sp2 = document.createElement('pre');
-			sp2.innerHTML = text;
-			documentFrag.appendChild(sp2);
-		}
-		function show(){
-			document.documentElement.appendChild(documentFrag);
-		}
+	// _di.set('service.devLog',function(){
+	// 	var documentFrag = document.createDocumentFragment();
+	// 	function log(text){
+	// 		var sp2 = document.createElement('pre');
+	// 		sp2.innerHTML = text;
+	// 		documentFrag.appendChild(sp2);
+	// 	}
+	// 	function show(){
+	// 		document.documentElement.appendChild(documentFrag);
+	// 	}
 
-		return {
-			log:log,
-			show:show
-		};
-	});
+	// 	return {
+	// 		log:log,
+	// 		show:show
+	// 	};
+	// });
 
 	/**
 	 * check support of webgl
@@ -503,7 +503,7 @@
 	_di.val('fac.check',function($gl){
 		var check = {};
 		var gl = $gl || _di.get('context');
-		var dev = _di.get('service.devLog');
+		// var dev = _di.get('service.devLog');
 
 		check.vertexSampler = (
 			gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS) >= 1
@@ -568,8 +568,8 @@
 			check.gpuSim = true;
 		}
 
-		dev.log(JSON.stringify(check,null,'\t'));
-		dev.show();
+		// dev.log(JSON.stringify(check,null,'\t'));
+		// dev.show();
 
 		// console.log(check
 		// 	//[JSON.stringify(,null,'\t')]
