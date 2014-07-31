@@ -4,16 +4,15 @@
 
 # WebGL Widget Description
 
-1. Logo Cube Scene + Noise Texture + Mobile perf friendly Gaussian Blur Post Processing
+1. Logo Cube Scene + Noise Texture + Mobile Perf friendly Gaussian Blur Post Processing
 2. GPU Simulated Particle Cloud Scene with 5 different animation mode
 	* Cyber Squares
 	* Edge Pulse
 	* Wave
 	* Strom
 	* WormHole
-3. LogoFan Scene on iOS 8 Beta4 for fallback GPU particle Scene.
-4. Built version's download size with gzip on GitHub-Page is about 18.5KB
-5. Mobile Perf Oriented.
+3. Built version's download size with gzip on GitHub-Page is about 18.5KB
+4. Mobile Perf Oriented.
 	* Memory Pool to reuse objects
 	* Frame Budget Task Manager
 	* No redundant GL calls.
