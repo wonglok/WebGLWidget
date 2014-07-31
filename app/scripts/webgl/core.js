@@ -564,15 +564,6 @@
 			check.gpuSim = true;
 		}
 
-		// if (
-		// 	navigator.userAgent.match(/(iPod|iPhone|iPad)/)
-		// ){
-		// 	var usrA= navigator.userAgent;
-		// 	var info = usrA.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
-		// 	if (parseFloat(info[2],10) <= 9537){//less than ios8 beta4.
-		// 		check.gpuSim = false;
-		// 	}
-		// }
 
 		// console.log(check
 		// 	//[JSON.stringify(,null,'\t')]
