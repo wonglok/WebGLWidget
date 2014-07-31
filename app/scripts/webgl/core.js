@@ -482,7 +482,7 @@
 	_di.set('service.devLog',function(){
 		var documentFrag = document.createDocumentFragment();
 		function log(text){
-			var sp2 = document.createElement('span');
+			var sp2 = document.createElement('pre');
 			sp2.innerHTML = text;
 			documentFrag.appendChild(sp2);
 		}
@@ -503,6 +503,7 @@
 	_di.val('fac.check',function($gl){
 		var check = {};
 		var gl = $gl || _di.get('context');
+		var dev = _di.get('service.devLog');
 
 		check.vertexSampler = (
 			gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS) >= 1
@@ -512,7 +513,7 @@
 			!!gl.getExtension('OES_texture_float')
 		);
 
-		check.checkFBOColor = function(){
+		check.checkFBOAttachment = function(){
 			var width = 10, height = 10;
 			var tex = gl.createTexture();
 			gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -520,10 +521,10 @@
 			//texture float
 
 			//cannot detect failure
-			//gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 
 			//can detect failure
-			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, null);
+			//gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, null);
 
 			//xy wrapping, clam to edge
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -553,20 +554,22 @@
 			}else{
 				return true;
 			}
-
 		};
 
-		check.fboColorAttachment = (function(){
-			return check.checkFBOColor();
+		check.fboAttachment = (function(){
+			return check.checkFBOAttachment();
 		}());
 
+
 		//if any of the stuff is not supported, then dont use this. :)
-		if (!check.vertexSampler || !check.oesFloat || !check.fboColorAttachment) {
+		if (!check.vertexSampler || !check.oesFloat || !check.fboAttachment) {
 			check.gpuSim = false;
 		}else{
 			check.gpuSim = true;
 		}
 
+		dev.log(JSON.stringify(check,null,'\t'));
+		dev.show();
 
 		// console.log(check
 		// 	//[JSON.stringify(,null,'\t')]
