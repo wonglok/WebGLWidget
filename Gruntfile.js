@@ -160,7 +160,7 @@ module.exports = function (grunt) {
 
 		},
 
-		grunt.loadNpmTasks('grunt-gh-pages');
+		//grunt.loadNpmTasks('grunt-gh-pages');
 		'gh-pages': {
 			dist:{
 				options: {
