@@ -511,7 +511,7 @@
 		);
 
 		check.makeTestTextureFBO = function(textureType){
-			var width = 10, height = 10;
+			var width = 1, height = 1;
 			var colorTexture = gl.createTexture();
 			gl.bindTexture(gl.TEXTURE_2D, colorTexture);
 
@@ -550,7 +550,6 @@
 
 			return {
 				attachment: (status === gl.FRAMEBUFFER_COMPLETE),
-				fbo: fbo
 			};
 		};
 		check.cleanUpBinding = function(){
@@ -974,66 +973,63 @@
 
 		};
 
-		var useProgram = {};
+		var _useProgram = {};
 		api.useProgram = function(prog){
-			if (useProgram.prog !== prog){
+			if (_useProgram.prog !== prog){
 				gl.useProgram(prog);
-				useProgram.prog = prog;
+				_useProgram.prog = prog;
 			}
 		};
 
 
-		var uniform1i = {};
+		var _uniform1i = {};
 		api.uniform1i = function(location,value){
 			var ns = location.___uniformName;
 			if(
-
-				uniform1i[ns] !== value
-
+				_uniform1i[ns] !== value
 			){
 				gl.uniform1i(location,value);
-				uniform1i[ns] = value;
+				_uniform1i[ns] = value;
 			}
 		};
 
-		var uniform1f = {};
+		var _uniform1f = {};
 		api.uniform1f = function(location,value){
 			var ns = location.___uniformName;
 			//checkChangeProg(uniform1f);
 			if(
-				uniform1f[ns] !== value
+				_uniform1f[ns] !== value
 			){
 				gl.uniform1f(location,value);
-				uniform1f[ns] = value;
+				_uniform1f[ns] = value;
 			}
 		};
 
-		var uniform3f = {
+		var _uniform3f = {
 			NS1:'1',
 			NS2:'2',
 			NS3:'3',
 		};
 		api.uniform3f = function(a0, a1, a2, a3){
 			var ns = a0.___uniformName;
-
 			if(
 				!(
-					uniform3f[ns+uniform3f.NS1] === a1 &&
-					uniform3f[ns+uniform3f.NS2] === a2 &&
-					uniform3f[ns+uniform3f.NS3] === a3
+					_uniform3f[ns+_uniform3f.NS1] === a1 &&
+					_uniform3f[ns+_uniform3f.NS2] === a2 &&
+					_uniform3f[ns+_uniform3f.NS3] === a3
 				)
 			){
 				gl.uniform3f(a0,a1,a2,a3);
 
-				uniform3f[ns+uniform3f.NS1] = a1;
-				uniform3f[ns+uniform3f.NS2] = a2;
-				uniform3f[ns+uniform3f.NS3] = a3;
+				_uniform3f[ns+_uniform3f.NS1] = a1;
+				_uniform3f[ns+_uniform3f.NS2] = a2;
+				_uniform3f[ns+_uniform3f.NS3] = a3;
 			}
 
 
 		};
 
-		var uniformMatrix4fv = {
+		var _uniformMatrix4fv = {
 			NS1:'1',
 			NS2:'2'
 		};
@@ -1046,41 +1042,41 @@
 
 			if(
 				!(
-					uniformMatrix4fv[ns+uniformMatrix4fv.NS1] === a1 &&
-					uniformMatrix4fv[ns+uniformMatrix4fv.NS2] === a2
+					_uniformMatrix4fv[ns+_uniformMatrix4fv.NS1] === a1 &&
+					_uniformMatrix4fv[ns+_uniformMatrix4fv.NS2] === a2
 				)
 			){
 				gl.uniformMatrix4fv(a0,a1,a2);
-				uniformMatrix4fv[ns+uniformMatrix4fv.NS1] = a1;
-				uniformMatrix4fv[ns+uniformMatrix4fv.NS2] = a2;
+				_uniformMatrix4fv[ns+_uniformMatrix4fv.NS1] = a1;
+				_uniformMatrix4fv[ns+_uniformMatrix4fv.NS2] = a2;
 			}
 
 		};
 
-		var bindBuffer = {};
+		var _bindBuffer = {};
 		api.bindBuffer = function(emTarget, objBuffer){
-			if (bindBuffer[emTarget !== objBuffer]){
+			if (_bindBuffer[emTarget !== objBuffer]){
 				gl.bindBuffer(emTarget, objBuffer);
 			}
 		};
 
-		var vertexAttribPointer = {};
+		var _vertexAttribPointer = {};
 		api.ask.vertexAttribPointer = function(a0,a1,a2,a3,a4,a5){
-			if (!vertexAttribPointer[a0]){
+			if (!_vertexAttribPointer[a0]){
 				if (a0 === -1 || typeof a0 === 'undefined'){
 					throw new Error('location not found!!: '+a0);
 				}
-				vertexAttribPointer[a0] = {};
+				_vertexAttribPointer[a0] = {};
 			}
 			if(
 				!(
-					vertexAttribPointer[a0].p === useProgram.prog &&
-					vertexAttribPointer[a0].a0 === a0 &&
-					vertexAttribPointer[a0].a1 === a1 &&
-					vertexAttribPointer[a0].a2 === a2 &&
-					vertexAttribPointer[a0].a3 === a3 &&
-					vertexAttribPointer[a0].a4 === a4 &&
-					vertexAttribPointer[a0].a5 === a5
+					_vertexAttribPointer[a0].p === _useProgram.prog &&
+					_vertexAttribPointer[a0].a0 === a0 &&
+					_vertexAttribPointer[a0].a1 === a1 &&
+					_vertexAttribPointer[a0].a2 === a2 &&
+					_vertexAttribPointer[a0].a3 === a3 &&
+					_vertexAttribPointer[a0].a4 === a4 &&
+					_vertexAttribPointer[a0].a5 === a5
 				)
 			){
 				return true;
@@ -1088,13 +1084,13 @@
 			return false;
 		};
 		api.mem.vertexAttribPointer = function(a0, a1, a2, a3, a4, a5){
-			vertexAttribPointer[a0].p = useProgram.prog;
-			vertexAttribPointer[a0].a0 = a0;
-			vertexAttribPointer[a0].a1 = a1;
-			vertexAttribPointer[a0].a2 = a2;
-			vertexAttribPointer[a0].a3 = a3;
-			vertexAttribPointer[a0].a4 = a4;
-			vertexAttribPointer[a0].a5 = a5;
+			_vertexAttribPointer[a0].p = _useProgram.prog;
+			_vertexAttribPointer[a0].a0 = a0;
+			_vertexAttribPointer[a0].a1 = a1;
+			_vertexAttribPointer[a0].a2 = a2;
+			_vertexAttribPointer[a0].a3 = a3;
+			_vertexAttribPointer[a0].a4 = a4;
+			_vertexAttribPointer[a0].a5 = a5;
 
 			//debugger;
 		};
@@ -1119,7 +1115,7 @@
 		};
 
 
-		var bindTexture = {};
+		var _bindTexture = {};
 		api.bindTexture = function(emTarget,objTexture){
 
 			// if (!emTarget){
@@ -1132,41 +1128,37 @@
 			// }
 
 			// if (objTexture && objTexture.___type){
-			// 	// debugger;
+			//     debugger;
 			// }
 
-
 			if(
-				bindTexture.program !== useProgram.program ||
-				bindTexture[emTarget] !== objTexture
+				_bindTexture.program !== _useProgram.program ||
+				_bindTexture[emTarget] !== objTexture
 			){
-
-
 				gl.bindTexture(emTarget,objTexture);
-
-				bindTexture[emTarget] = objTexture;
-				bindTexture.program = useProgram.program;
+				_bindTexture[emTarget] = objTexture;
+				_bindTexture.program = _useProgram.program;
 			}
 
 		};
 
 
-		var activeTexture = {};
+		var _activeTexture = {};
 		api.activeTexture = function(textureID){
 			//checkChangeProg(activeTexture);
 			if(
 				(
-					activeTexture.texture !== textureID
+					_activeTexture.texture !== textureID
 				)
 			){
 				gl.activeTexture(textureID);
-				activeTexture.texture = textureID;
+				_activeTexture.texture = textureID;
 			}
 
 		};
 
 		//int x, inty, long width, long height
-		var viewport = {
+		var _viewport = {
 			a0:null,
 			a1:null,
 			a2:null,
@@ -1175,38 +1167,41 @@
 		api.viewport = function(ix,iy,lw,lh){
 			if(
 				!(
-					viewport.a0 === ix &&
-					viewport.a1 === iy &&
-					viewport.a2 === lw &&
-					viewport.a3 === lh
+					_viewport.a0 === ix &&
+					_viewport.a1 === iy &&
+					_viewport.a2 === lw &&
+					_viewport.a3 === lh
 				)
 			){
 				gl.viewport(ix,iy,lw,lh);
-				viewport.a0 = ix;
-				viewport.a1 = iy;
-				viewport.a2 = lw;
-				viewport.a3 = lh;
+				_viewport.a0 = ix;
+				_viewport.a1 = iy;
+				_viewport.a2 = lw;
+				_viewport.a3 = lh;
 			}
 
 		};
 
-		var blendFunc = [null,null];
+		var _blendFunc = {
+			a0:null,
+			a1:null,
+		};
 		api.blendFunc = function(a0,a1){
 			if(
 				!(
-					blendFunc[0] === a0 &&
-					blendFunc[1] === a1
+					_blendFunc.a0 === a0 &&
+					_blendFunc.a1 === a1
 				)
 			){
 				gl.blendFunc(a0,a1);
-				blendFunc[0] = a0;
-				blendFunc[1] = a1;
+				_blendFunc.a0 = a0;
+				_blendFunc.a1 = a1;
 			}
 
 		};
 
 		//color rgba, float
-		var clearColor = {
+		var _clearColor = {
 			a0:null,
 			a1:null,
 			a2:null,
@@ -1215,36 +1210,36 @@
 		api.clearColor = function(cR,cG,cB,cA){
 			if(
 				!(
-					clearColor.a0 === cR &&
-					clearColor.a1 === cG &&
-					clearColor.a2 === cB &&
-					clearColor.a3 === cA
+					_clearColor.a0 === cR &&
+					_clearColor.a1 === cG &&
+					_clearColor.a2 === cB &&
+					_clearColor.a3 === cA
 				)
 			){
 				gl.clearColor(cR,cG,cB,cA);
-				clearColor.a0 = cR;
-				clearColor.a1 = cG;
-				clearColor.a2 = cB;
-				clearColor.a3 = cA;
+				_clearColor.a0 = cR;
+				_clearColor.a1 = cG;
+				_clearColor.a2 = cB;
+				_clearColor.a3 = cA;
 			}
 		};
 
-		var enabled = {};
+		var _enabled = {};
 		api.enable = function(emProperty){
 			if (
-					enabled[emProperty] !== true
+				_enabled[emProperty] !== true
 			){
 				gl.enable(emProperty);
-				enabled[emProperty] = true;
+				_enabled[emProperty] = true;
 			}
 
 		};
 		api.disable = function(emProperty){
 			if (
-					enabled[emProperty] !== false
+					_enabled[emProperty] !== false
 			){
 				gl.disable(emProperty);
-				enabled[emProperty] = false;
+				_enabled[emProperty] = false;
 			}
 		};
 
@@ -1256,7 +1251,6 @@
 	});
 
 	_di.set('service.console.logo',function(){
-
 		var consoleLogo = function (width,height,url,comment){
 
 			//config
@@ -1311,7 +1305,6 @@
 		return {
 			say: consoleLogo
 		};
-
 
 	});
 
