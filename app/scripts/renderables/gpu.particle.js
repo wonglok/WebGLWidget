@@ -276,10 +276,8 @@
 			mat4.rotate(mvStack.mvMatrix, mvStack.mvMatrix, degToRad(this.tiltY), [1.0, 0.0, 0.0]);
 			mat4.rotate(mvStack.mvMatrix, mvStack.mvMatrix, degToRad(this.tiltX), [0.0, 1.0, 0.0]);
 
-
 			_lg.uniformMatrix4fv(this.program.uMVMatrix, false, mvStack.mvMatrix);
 			mvStack.mvRestore();
-
 
 
 			//simulated position
@@ -343,11 +341,6 @@
 			return api;
 		};
 
-
-
-		// api.render = function (){
-		// 	ohParticle.render();
-		// };
 
 		return api;
 	});

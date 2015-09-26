@@ -6,7 +6,6 @@
 
 		api.blur = _di.get('program.post.blur');
 		// api.normal = _di.get('program.post.normal');
-		// api.particleSim = _di.get('program.particle.simulate');
 
 		return api;
 	});
@@ -69,13 +68,13 @@
 				//
 				eng: ren.cube,
 				post: post.blur,
-				next: 4000
+				next: 2000
 			},
 			{
 				//Cyber Squares,
 				eng: ren.particle,
 				mode: 5,
-				next: 4000
+				next: 3500
 			},
 			{
 				//Edge Pulse,
@@ -85,10 +84,10 @@
 				next: 4000
 			},
 			{
-				//Wave,
+				//WormHole
 				eng: ren.particle,
-				mode: 1,
-				next: 4000
+				mode: 4,
+				next: 5000
 			},
 			{
 				//Strom,
@@ -97,10 +96,10 @@
 				next: 5000
 			},
 			{
-				//WormHole
+				//Wave,
 				eng: ren.particle,
-				mode: 4,
-				next: 5000
+				mode: 1,
+				next: 4000
 			},
 			{
 				//Edge Pulse
@@ -118,7 +117,7 @@
 
 		var stages = {
 			now: null,
-			currentIndex: 0,
+			nowIndex: 0,
 			clear: true
 		};
 
@@ -130,6 +129,7 @@
 			stages.now = scene[stages.nowIndex];
 			stages.clear = true;
 
+			//updateMode is for particle.
 			if (stages.now.eng.updateMode){
 				frbt.addTask(
 					stages.now.eng.updateMode,
@@ -191,7 +191,7 @@
 		// return render;
 	});
 
-	_di.val('run',function(){
+	_di.set('noWebGL',function(){
 		var canvas = _di.get('canvas');
 		var context = _di.get('context');
 
@@ -203,6 +203,7 @@
 			var gEl = function (id){
 				return d.getElementById(id);
 			};
+
 			// var add = function(e,c){
 			// 	e.appendChild(c);
 			// };
@@ -231,16 +232,22 @@
 			return;
 		}
 
-		_di.get('service.contextLost');
-		//_di.get('service.focus');
+	});
 
+	_di.val('run',function(){
+		// var canvas = _di.get('canvas');
+		// var context = _di.get('context');
+
+		_di.get('noWebGL');
+
+		// _di.get('service.contextLost');
+
+		//_di.get('service.focus');
 		_di.get('loop').start();
 
 	});
 
 }(window._di));
-
-
 
 
 

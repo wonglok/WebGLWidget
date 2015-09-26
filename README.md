@@ -3,19 +3,19 @@
 2. iOS Support for GPU Particle Simulation.
 
 # WebGL Widget Description
-
 1. Logo Cube Scene + Noise Texture + Mobile Perf friendly Gaussian Blur Post Processing
 2. GPU Simulated Particle Cloud Scene with 5 different animation mode
 	* Cyber Squares
-	* Edge Pulse
+	* Edge Pulse + Gaussian Blur Post process.
 	* Wave
 	* Strom
 	* WormHole
-3. Built version's download size with gzip on GitHub-Page is about 18.5KB
+3. Built version's download size with gzip on GitHub-Page is about 18.5KB+-
 4. Mobile Perf Oriented.
 	* Memory Pool to reuse objects
 	* Frame Budget Task Manager
-	* No redundant GL calls.
+	* No redundant GL calls
+5. Learn how to use raw gl calls correctly.
 
 # Control in Particle Scene:
 1. up,down,left,right to rotate
