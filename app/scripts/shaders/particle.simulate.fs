@@ -44,7 +44,6 @@ void main() {
 
 	vec4 lastPos = texture2D(uSampler, vTC);
 
-
 	float rVal = rand(vec2(
 		vTC.x,
 		vTC.y

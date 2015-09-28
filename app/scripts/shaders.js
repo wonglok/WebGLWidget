@@ -265,7 +265,6 @@
     "\n" +
     "\tvec4 lastPos = texture2D(uSampler, vTC);\n" +
     "\n" +
-    "\n" +
     "\tfloat rVal = rand(vec2(\n" +
     "\t\tvTC.x,\n" +
     "\t\tvTC.y\n" +

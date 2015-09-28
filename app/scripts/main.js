@@ -64,6 +64,12 @@
 		];
 		var scene = [
 
+			// {
+			// 	//
+			// 	eng: ren.logo,
+			// 	// post: post.blur,
+			// 	next: 2000
+			// },
 			{
 				//
 				eng: ren.cube,
@@ -136,7 +142,6 @@
 					stages.now.eng,
 					stages.now.mode
 				);
-
 				//stages.now.eng.updateMode(stages.now.mode);
 			}
 
@@ -182,9 +187,10 @@
 
 		};
 
-		var frbt = _di.get('service.frbt');
+		// var frbt = _di.get('service.frbt');
 		var addRender = function(){
-			frbt.addTask(render);
+			render();
+			// frbt.addTask(render);
 		};
 		return addRender;
 
